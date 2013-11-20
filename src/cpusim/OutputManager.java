@@ -8,7 +8,6 @@
  * 
  * @created November 10, 2013
  * @author Peter Zhang, Brendan Tschaen, Stephen Jenkins
- * last modified: Nov 15 2013
  */
 
 
