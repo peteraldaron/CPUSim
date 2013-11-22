@@ -156,8 +156,8 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"Queue not empty and type mismatch, "
-    	    				             	+ "flusing queue:"+
+            						"There were still input left, "
+    	    				             	+ "discarding them:"+
     	    				             		"\n"+inputmanager.toString()+"\n", 
                         			"Error", 
                         			"Dialog Channel");
@@ -196,8 +196,8 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"Queue not empty and type mismatch, "
-    	    				             	+ "flusing queue:"+
+            						"There were still input left, "
+    	    				             	+ "discarding them:"+
     	    				             		"\n"+inputmanager.toString()+"\n", 
                         			"Error", 
                         			"Dialog Channel");
