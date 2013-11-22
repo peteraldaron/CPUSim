@@ -10,6 +10,7 @@
  * 
  * @created November 13, 2013
  * @author Peter Zhang, Brendan Tschaen, Stephen Jenkins
+ * @modified November 22 2013
  */
 package cpusim;
 
@@ -88,10 +89,6 @@ class InputManager {
 		while( buffer.charAt(0) == ' ') {
 			buffer.deleteCharAt(0);
 		}
-		
-		
-		
-		
 		//checks to see if first long is valid
 		StringBuilder tempLong=new StringBuilder("");
 		boolean isNegative=false;
