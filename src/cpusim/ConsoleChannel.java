@@ -315,7 +315,7 @@ public class ConsoleChannel implements IOChannel {
      */
     public void writeLong(final long longValue) {
     	//just add the output since this will not be a '\n'
-    	outputmanager.addOutput(String.valueOf(longValue));
+    	outputmanager.addOutput(String.valueOf(longValue)+ " ");
     }
 
     /**
