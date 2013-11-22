@@ -90,11 +90,10 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"Queue not empty and/or type mismatch, "
-    	    				             	+ "flusing queue:"+
-    	    				             		"\n"+inputmanager.toString()+"\n", 
-                        			"Error", 
-                        			"Dialog Channel");
+            						"Unused inputs discarded"+
+	    				             		"\n"+inputmanager.toString()+"\n", 
+                    			"Error", 
+                    			"Dialog Channel");
             			}
             		});
         		} catch (Exception e) {
@@ -156,11 +155,10 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"There were still input left, "
-    	    				             	+ "discarding them:"+
-    	    				             		"\n"+inputmanager.toString()+"\n", 
-                        			"Error", 
-                        			"Dialog Channel");
+            						"Unused inputs discarded"+
+	    				             		"\n"+inputmanager.toString()+"\n", 
+                    			"Error", 
+                    			"Dialog Channel");
             			}
             		});
         		} catch (Exception e) {
@@ -196,8 +194,7 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"There were still input left, "
-    	    				             	+ "discarding them:"+
+            						"Unused inputs discarded"+
     	    				             		"\n"+inputmanager.toString()+"\n", 
                         			"Error", 
                         			"Dialog Channel");
@@ -222,7 +219,7 @@ public class DialogChannel implements IOChannel {
      */
     public void writeLong(final long value) {
     	//just add the output since this will not be a '\n'
-    	outputmanager.addOutput(String.valueOf(value)+ " ");
+    	outputmanager.addOutput(String.valueOf(value));
     }
 
     /**
