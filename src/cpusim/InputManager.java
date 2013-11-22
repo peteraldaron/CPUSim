@@ -54,10 +54,10 @@ class InputManager {
 			}
 			//checks to see if first long is valid
 			StringBuilder tempLong=new StringBuilder("");
-			boolean negative=false;
+			boolean isNegative=false;
 			//negative check:
 			if(!buffer.toString().isEmpty() && buffer.charAt(0)=='-' && buffer.charAt(1)<='9' && buffer.charAt(1)>='0'){
-				negative=true;
+				isNegative=true;
 				buffer.deleteCharAt(0);
 			}
 			while((!buffer.toString().isEmpty()) && (buffer.charAt(0)<='9' && buffer.charAt(0)>='0')){
@@ -70,7 +70,7 @@ class InputManager {
 				if(buffer.length()!=0 && buffer.charAt(0)==' '){
 					buffer.deleteCharAt(0);
 				}
-				if(negative){
+				if(isNegative){
 					tempLong.insert(0, '-');
 				}
 				return tempLong.toString();
