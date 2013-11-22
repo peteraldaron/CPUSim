@@ -48,35 +48,7 @@ class InputManager {
 			return "";
 		}
 		if(type.equals("Long")){
-			// Eat up all the spaces before the first int char
-			while( buffer.charAt(0) == ' ') {
-				buffer.deleteCharAt(0);
-			}
-			//checks to see if first long is valid
-			StringBuilder tempLong=new StringBuilder("");
-			boolean isNegative=false;
-			//negative check:
-			if(!buffer.toString().isEmpty() && buffer.charAt(0)=='-' && buffer.charAt(1)<='9' && buffer.charAt(1)>='0'){
-				isNegative=true;
-				buffer.deleteCharAt(0);
-			}
-			while((!buffer.toString().isEmpty()) && (buffer.charAt(0)<='9' && buffer.charAt(0)>='0')){
-				tempLong.append(buffer.charAt(0));
-				buffer.deleteCharAt(0);
-			}
-			//make sure the input is not empty and there's a space after the string 
-			//that represents long.
-			if(buffer.length()==0 || buffer.charAt(0)==' '){
-				if(buffer.length()!=0 && buffer.charAt(0)==' '){
-					buffer.deleteCharAt(0);
-				}
-				if(isNegative){
-					tempLong.insert(0, '-');
-				}
-				return tempLong.toString();
-			}
-			else return "";
-			
+			return parseLong();	// Parse the next integer off the buffer.
 		}
 		
 		else if(type.equals("ASCII")){
@@ -108,6 +80,46 @@ class InputManager {
 		}
 		//not supposed to get here
 		return "";
+	}
+	
+	// Parse the next long off the buffer string.
+	private String parseLong() {
+		// Eat up all the spaces before the first int char
+		while( buffer.charAt(0) == ' ') {
+			buffer.deleteCharAt(0);
+		}
+		
+		
+		
+		
+		//checks to see if first long is valid
+		StringBuilder tempLong=new StringBuilder("");
+		boolean isNegative=false;
+		//negative check:
+		if(!buffer.toString().isEmpty() && buffer.charAt(0)=='-' 
+				&& buffer.charAt(1)<='9' && buffer.charAt(1)>='0'){
+			isNegative=true;
+			buffer.deleteCharAt(0);
+		}
+		//Continue to append integers to the tempLong as long as there 
+		//are integers on the top of the buffer
+		while((!buffer.toString().isEmpty()) && (buffer.charAt(0)<='9' 
+				&& buffer.charAt(0)>='0')){
+			tempLong.append(buffer.charAt(0));
+			buffer.deleteCharAt(0);
+		}
+		//make sure the input is not empty and there's a space after the string
+		//that represents long.
+		if(buffer.length()==0 || buffer.charAt(0)==' '){
+			if(buffer.length()!=0 && buffer.charAt(0)==' '){
+				buffer.deleteCharAt(0);
+			}
+			if(isNegative){
+				tempLong.insert(0, '-');
+			}
+			return tempLong.toString();
+		}
+		else return "";
 	}
 	
 	/**
