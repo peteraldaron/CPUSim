@@ -90,7 +90,7 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"Unused inputs discarded"+
+            						"Unused inputs discarded:"+
 	    				             		"\n"+inputmanager.toString()+"\n", 
                     			"Error", 
                     			"Dialog Channel");
@@ -155,7 +155,7 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"Unused inputs discarded"+
+            						"Unused inputs discarded:"+
 	    				             		"\n"+inputmanager.toString()+"\n", 
                     			"Error", 
                     			"Dialog Channel");
@@ -194,7 +194,7 @@ public class DialogChannel implements IOChannel {
             		FXUtilities.runAndWait(new Runnable() {
             			public void run() {
             				Dialogs.showErrorDialog(stage,
-            						"Unused inputs discarded"+
+            						"Unused inputs discarded:"+
     	    				             		"\n"+inputmanager.toString()+"\n", 
                         			"Error", 
                         			"Dialog Channel");
@@ -219,7 +219,7 @@ public class DialogChannel implements IOChannel {
      */
     public void writeLong(final long value) {
     	//just add the output since this will not be a '\n'
-    	outputmanager.addOutput(String.valueOf(value));
+    	outputmanager.addOutput(String.valueOf(value)+ " ");
     }
 
     /**
