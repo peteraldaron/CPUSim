@@ -38,6 +38,7 @@ Done:  	load A0 sign 	; Done: load the sign into A0
 neg:	subtract A1 A2	; A1 <- A1-A2 = 0-sum
 	move A2 A1	; copy A1 into A2
 pos:	store A2 IO	; pos: output the final sum in A2
+	store A2 IO      ; again
        	exit  		; stop
 
 ; variables (the "2" after ".data" means use 2 bytes for the 
