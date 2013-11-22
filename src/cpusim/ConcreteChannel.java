@@ -1,8 +1,9 @@
 /**
  * File: ConcreteChannel
- * LastUpdate: November 2013
+ * Last Updated: November 2013
  * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
  * Methods added: clearIOChannelBuffer
+ * Fields added: inputmanager, outputmanager
  */
 package cpusim;
 
@@ -14,9 +15,12 @@ package cpusim;
  * involve the GUI as needed.  It is up to the GUI to add these state
  * channels.
  */
+//TODO: change name to BufferedChannel
 public class ConcreteChannel implements IOChannel {
     private String name;
     private IOChannel state;
+    private InputManager inputmanager;
+    private OutputManager outputmanager;
     
     /**
      * The constructor to create a ConcreteChannel.
@@ -66,7 +70,11 @@ public class ConcreteChannel implements IOChannel {
      * able to fit into.
      */
     public long readLong(int numBits) {
-        return state.readLong(numBits);
+    	if(inputmanager.isEmpty()){
+    		inputmanager.setBuffer(state.getInput());
+    	}
+    	while(!inputmanager.isEmpty())
+    		return state.readLong(numBits);
     }
     
     /**

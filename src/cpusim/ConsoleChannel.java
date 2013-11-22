@@ -42,6 +42,8 @@ public class ConsoleChannel implements IOChannel {
 	//Output buf
 	private OutputManager outputmanager;
 	
+	private String userInput;
+	private String output;
 	/**
 	 * Constructor for new Console Channel. There is only
 	 * one Console channel that is used, however, look in

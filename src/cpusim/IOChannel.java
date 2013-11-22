@@ -73,5 +73,5 @@ public interface IOChannel extends CPUSimConstants {
      * used a buffer
      */
     public void clearIOChannelBuffer();
-
+    
 }

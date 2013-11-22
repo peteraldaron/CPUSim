@@ -8,6 +8,7 @@
 package cpusim;
 
 import cpusim.util.*;
+
 import java.io.*;
 
 /**
@@ -270,5 +271,4 @@ public class FileChannel implements IOChannel  {
     public void clearIOChannelBuffer(){
     	
     }
-
 }

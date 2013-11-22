@@ -362,5 +362,4 @@ public class DialogChannel implements IOChannel {
     public String toString() {
         return name;
     }
-
 }

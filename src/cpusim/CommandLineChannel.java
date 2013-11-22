@@ -127,5 +127,10 @@ public class CommandLineChannel implements IOChannel {
     public void clearIOChannelBuffer(){
     	
     }
+    //TODO:to be changed
+    public String getInput(){
+    	return "";
+    }
+    public void setOutput(String output){}
 
 }
