@@ -85,11 +85,13 @@ public class ConcreteChannel implements IOChannel {
     		String output=this.inputmanager.nextInput("Long");
     		if(!output.equals("")){
     			//if input is valid:
-				long outputResult=Convert.fromAnyBaseStringToLong(output);
+				long outputResult=
+                                        Convert.fromAnyBaseStringToLong(output);
 				if(!Convert.fitsInBits(outputResult, numBits)){
-					state.output("\n"+"number of bits invalid, "
+					state.output("\n"
+                                                +"number of bits invalid, "
 	    	    		             	+"enter again."
-	    	        					+inputmanager.toString()+"\n");
+	    	        			+inputmanager.toString()+"\n");
 
     			}
 				else return outputResult;
@@ -97,7 +99,7 @@ public class ConcreteChannel implements IOChannel {
     		else{
     			state.output("\n"+"Illegal integer detected, "
     	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+"\n");
+    	        			+inputmanager.toString()+"\n");
     		}
     	}
     }
