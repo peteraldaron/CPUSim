@@ -36,6 +36,7 @@ public class ConcreteChannel implements IOChannel {
         this.state = s;
         this.name = n;
         this.inputmanager=new InputManager();
+        this.outputmanager=new OutputManager();
     }
     
     /**
@@ -170,7 +171,10 @@ public class ConcreteChannel implements IOChannel {
      * @param value - the value to output to the user.
      */
     public void writeLong(long value) {
-        state.writeLong(value);
+        //just add the output since this will not be a '\n'
+        outputmanager.addOutput(String.valueOf(value)+ " ");
+        //we can skip the state completely:
+        //state.writeLong(value);
     }
     
     /**
@@ -180,7 +184,19 @@ public class ConcreteChannel implements IOChannel {
      * output to the user.
      */
     public void writeAscii(long longValue) {
-        state.writeAscii(longValue);
+        if (longValue > 255 || longValue < 0)
+            throw new ExecutionException("Attempt to output the value " +
+                    longValue + " as an ASCII value.");
+        if(longValue=='\n'){
+            state.output("Output: "+outputmanager.toString()+'\n');
+            outputmanager.clearBuffer();
+        }
+        //otherwise keep on appending
+        else{
+            this.outputmanager.addOutput(String.valueOf((char)longValue));
+        }
+        //skipping state:
+        //state.writeAscii(longValue);
     }
     
     /**
@@ -190,6 +206,16 @@ public class ConcreteChannel implements IOChannel {
      * to output to the user.
      */
     public void writeUnicode(long longValue) {
+        if (longValue > 65535 || longValue < 0)
+            throw new ExecutionException("Attempt to output the value " +
+                    longValue + " as a Unicode value.");
+        if(longValue=='\n'){ 
+            state.output("Output value: " + outputmanager.toString());
+        }
+        //otherwise keep on appending
+        else{
+            this.outputmanager.addOutput(String.valueOf((char)longValue));
+        }
         state.writeUnicode(longValue);
     }
     

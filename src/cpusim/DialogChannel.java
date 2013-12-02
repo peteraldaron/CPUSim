@@ -132,6 +132,7 @@ public class DialogChannel implements IOChannel {
      * @throws ExecutionException if the long is not an ASCII char
      */
     public void writeAscii(final long longValue) {
+        /*
         if (longValue > 255 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an ASCII value.");
@@ -166,7 +167,7 @@ public class DialogChannel implements IOChannel {
         else{
             this.outputmanager.addOutput(String.valueOf((char)longValue));
         }
-        
+       */ 
     }
 
     /**
@@ -176,6 +177,7 @@ public class DialogChannel implements IOChannel {
      * @throws ExecutionException if the long is not an Unicode char
      */
     public void writeUnicode(final long longValue) {
+        /*
         if (longValue > 65535 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as a Unicode value.");
@@ -210,6 +212,7 @@ public class DialogChannel implements IOChannel {
         else{
             this.outputmanager.addOutput(String.valueOf((char)longValue));
         }
+        */
     }
 
     /** 
@@ -278,7 +281,7 @@ public class DialogChannel implements IOChannel {
         try {
                 FXUtilities.runAndWait(new Runnable() {
                     public void run() {
-                        Dialogs.showConfirmDialog(stage,
+                        Dialogs.showInformationDialog(stage,
                             s,
                             "Notice", 
                             "Dialog Channel");

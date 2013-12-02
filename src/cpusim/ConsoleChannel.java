@@ -233,7 +233,9 @@ public class ConsoleChannel implements IOChannel {
      */
     public void writeLong(final long longValue) {
         //just add the output since this will not be a '\n'
+        /*
         outputmanager.addOutput(String.valueOf(longValue)+ " ");
+        */
     }
 
     /**
@@ -243,6 +245,7 @@ public class ConsoleChannel implements IOChannel {
      * @throws ExecutionException if the long is not an ASCII char
      */
     public void writeAscii(final long longValue) {
+        /*
         if (longValue > 255 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an ASCII value.");
@@ -264,6 +267,7 @@ public class ConsoleChannel implements IOChannel {
         else{
             this.outputmanager.addOutput(String.valueOf((char)longValue));
         }
+        */
     }
 
     /**
@@ -273,6 +277,7 @@ public class ConsoleChannel implements IOChannel {
      * @throws ExecutionException if the long is not an Unicode char
      */
     public void writeUnicode(final long longValue) {
+        /*
         if (longValue > 65535 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an Unicode value.");
@@ -294,7 +299,7 @@ public class ConsoleChannel implements IOChannel {
         else{
             this.outputmanager.addOutput(String.valueOf((char)longValue));
         }
-        
+        */        
     }
 
     /** 
@@ -309,6 +314,7 @@ public class ConsoleChannel implements IOChannel {
      */
     public void clearIOChannelBuffer(){
         //flush & reset the buffers:
+        /*
         if(!inputmanager.toString().isEmpty()){
             try {
                 FXUtilities.runAndWait(new Runnable() {
@@ -337,6 +343,7 @@ public class ConsoleChannel implements IOChannel {
         }
         inputmanager.clearBuffer();
         outputmanager.clearBuffer();
+        */
     }
     /**
      * Gives a string representation of the object.
