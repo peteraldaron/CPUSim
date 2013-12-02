@@ -433,5 +433,30 @@ public class ConsoleChannel implements IOChannel {
     private String getPrompt() {
     	return "Enter input(s):";
     }
+    /**
+     * output the string to the console
+     * @param String to be output
+     */
+    public void output(final String s){
+    	try {
+    		FXUtilities.runAndWait(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText(s);
+                }
+            });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to write a value to the console.");
+		}
+    }
+    
+    /**
+     * get input from the console.
+     * added here for inheritance compatibility
+     */
+    public String getInput(){
+    	//return the empty string
+    	return "";
+    }
     
 }

@@ -362,4 +362,17 @@ public class DialogChannel implements IOChannel {
     public String toString() {
         return name;
     }
+    
+    /**
+     * output the string to a dialog
+     * @param String to be output
+     */
+    public void output(String s){}
+    
+    /**
+     * get the input in the dialog
+     */
+    public String getInput(){
+    	return "";
+    }
 }

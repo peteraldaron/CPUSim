@@ -7,6 +7,9 @@
  */
 package cpusim;
 
+import cpusim.util.Convert;
+import cpusim.util.FXUtilities;
+
 /**
  * This class represents an IOChannel that uses the State pattern to
  * delegate the actual behavior to another IOChannel. It just provides
@@ -72,10 +75,31 @@ public class ConcreteChannel implements IOChannel {
     public long readLong(int numBits) {
     	//if inputmanager is empty, get the input from the states(channels).
     	if(inputmanager.isEmpty()){
+    		//have the state getting the input
+    		state.readLong(numBits);
     		inputmanager.setBuffer(state.getInput());
     	}
-    	while(!inputmanager.isEmpty())
-    		return state.readLong(numBits);
+    	//if inputmanager is not empty, 
+    	if(!this.inputmanager.isEmpty()){
+    		//if not empty, get next input:
+    		String output=this.inputmanager.nextInput("Long");
+    		if(!output.equals("")){
+    			//if input is valid:
+				long outputResult=Convert.fromAnyBaseStringToLong(output);
+				if(!Convert.fitsInBits(outputResult, numBits)){
+					state.output("\n"+"number of bits invalid, "
+	    	    		             	+"enter again."
+	    	        					+inputmanager.toString()+"\n");
+
+    			}
+				else return outputResult;
+    		}
+    		else{
+    			state.output("\n"+"Illegal integer detected, "
+    	    		             	+"input discarded:"
+    	        					+inputmanager.toString()+"\n");
+    		}
+    	}
     }
     
     /**
@@ -154,5 +178,19 @@ public class ConcreteChannel implements IOChannel {
      */
     public void clearIOChannelBuffer(){
     	this.state.clearIOChannelBuffer();
+    }
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public void output(String s){}
+    
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public String getInput(){
+    	//return the empty string
+    	return "";
     }
 }
