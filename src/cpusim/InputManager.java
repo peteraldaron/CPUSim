@@ -33,6 +33,9 @@ class InputManager {
 	public void setBuffer(String input){
 		//clear the buffer
 		this.buffer=new StringBuilder("");
+        //deal with null case.
+        if(input==null)
+            this.buffer.append("");
 		this.buffer.append(input);
 	}
 

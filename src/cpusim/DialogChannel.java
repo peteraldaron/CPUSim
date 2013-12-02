@@ -62,51 +62,32 @@ public class DialogChannel implements IOChannel {
      * @throws ExecutionException if it cannot read a long.
      */
     public long readLong(final int numBits) {
-    	if(!this.inputmanager.isEmpty()){
-    		String output=this.inputmanager.nextInput("Long");
-    		if(!output.equals("")){
-    			long outputResult=Convert.fromAnyBaseStringToLong(output);
-				if(!Convert.fitsInBits(outputResult, numBits)){
-					try {
-	            		FXUtilities.runAndWait(new Runnable() {
-	            			public void run() {
-	            				Dialogs.showErrorDialog(stage,
-	            						"Number of bits invalid, "
-	    	    				             	+ "enter again:"+
-	    	    				             		"\n"+inputmanager.toString()+"\n", 
-	                        			"Error", 
-	                        			"Dialog Channel");
-	            			}
-	            		});
-	        		} catch (Exception e) {
-	        			throw new ExecutionException("An Exception was thrown" +
-	        					" when we attempted to read from the console.");
-	        		}
-    			}
-				else return outputResult;
-    		}
-    		else{
-    			try {
-            		FXUtilities.runAndWait(new Runnable() {
-            			public void run() {
-            				Dialogs.showErrorDialog(stage,
-            						"Unused inputs discarded:"+
-	    				             		"\n"+inputmanager.toString()+"\n", 
-                    			"Error", 
-                    			"Dialog Channel");
-            			}
-            		});
-        		} catch (Exception e) {
-        			throw new ExecutionException("An Exception was thrown" +
-        					" when we attempted to read from the console.");
-        		}
-    		}
-    		
-    	}
     	readUserInput();
-		return readLong(numBits);
+        //not relevant anymore. io taken care by concretechannel
+		return 0; 
     }
 
+    /**
+     * returns the next ASCII char from input.
+     *
+     * @return the ASCII character read
+     * @throws ExecutionException if it cannot read an ASCII char.
+     */
+    public char readAscii() {
+    	readUserInput();
+		return ' '; 
+    }
+
+    /**
+     * returns the next Unicode char from input.
+     *
+     * @return the Unicode character read
+     * @throws ExecutionException if it cannot read an Unicode char.
+     */
+    public char readUnicode() {
+    	readUserInput();
+		return ' ';
+    }
 	private void readUserInput() {
 		boolean done = false;
     	while (!done) {
@@ -128,89 +109,10 @@ public class DialogChannel implements IOChannel {
     			// The user chose "Cancel" from the input dialog.
     			throw new ExecutionException("Input cancelled.");
             }
-            inputmanager.setBuffer(input);
             done = true;
         }
 	}
-
-    /**
-     * returns the next ASCII char from input.
-     *
-     * @return the ASCII character read
-     * @throws ExecutionException if it cannot read an ASCII char.
-     */
-    public char readAscii() {
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("ASCII");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    			//if type mismatch, output dialog 
-    			//that displays remaining items in buffer
-    			//and flushes buffer
-    			try {
-            		FXUtilities.runAndWait(new Runnable() {
-            			public void run() {
-            				Dialogs.showErrorDialog(stage,
-            						"Unused inputs discarded:"+
-	    				             		"\n"+inputmanager.toString()+"\n", 
-                    			"Error", 
-                    			"Dialog Channel");
-            			}
-            		});
-        		} catch (Exception e) {
-        			throw new ExecutionException("An Exception was thrown" +
-        					" when we attempted to read from the console.");
-        		}
-    		}
-    		
-    	}
-    	readUserInput();
-		return readAscii();
-    }
-
-    /**
-     * returns the next Unicode char from input.
-     *
-     * @return the Unicode character read
-     * @throws ExecutionException if it cannot read an Unicode char.
-     */
-    public char readUnicode() {
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Unicode");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    			//if type mismatch, output dialog 
-    			//that displays remaining items in buffer
-    			//and flushes buffer
-    			try {
-            		FXUtilities.runAndWait(new Runnable() {
-            			public void run() {
-            				Dialogs.showErrorDialog(stage,
-            						"Unused inputs discarded:"+
-    	    				             		"\n"+inputmanager.toString()+"\n", 
-                        			"Error", 
-                        			"Dialog Channel");
-            			}
-            		});
-        		} catch (Exception e) {
-        			throw new ExecutionException("An Exception was thrown" +
-        					" when we attempted to read from the console.");
-        		}
-    		}
-    		
-    	}
-    	readUserInput();
-		return readUnicode();
-    }
-
+    
     /**
      * add the given long value to the outputmanager
      * to be output later
@@ -321,7 +223,11 @@ public class DialogChannel implements IOChannel {
      * called in the machine's listener
      */
     public void clearIOChannelBuffer(){
-    	//reset the buffer:
+    	
+        //now handled by concretechannel
+        //reset the buffer:
+        
+        /*
     	if(!inputmanager.toString().isEmpty()){
     		try {
         		FXUtilities.runAndWait(new Runnable() {
@@ -353,6 +259,7 @@ public class DialogChannel implements IOChannel {
     		}
     	this.inputmanager.clearBuffer();
     	this.outputmanager.clearBuffer();
+        */
     }
 
     /**
@@ -365,14 +272,28 @@ public class DialogChannel implements IOChannel {
     
     /**
      * output the string to a dialog
-     * @param String to be output
+     * @param string to be output
      */
-    public void output(String s){}
+    public void output(final String s){
+        try {
+                FXUtilities.runAndWait(new Runnable() {
+                    public void run() {
+                        Dialogs.showConfirmDialog(stage,
+                            s,
+                            "Notice", 
+                            "Dialog Channel");
+                    }
+                });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to read from the console.");
+        }
+    }
     
     /**
      * get the input in the dialog
      */
     public String getInput(){
-    	return "";
+    	return input;
     }
 }

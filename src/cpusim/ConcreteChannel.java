@@ -225,6 +225,13 @@ public class ConcreteChannel implements IOChannel {
      * call state's cleariochannelbuffer method
      */
     public void clearIOChannelBuffer(){
+        //reset the buffer:
+    	if(!inputmanager.toString().isEmpty())
+            state.output("Flushing Input: "+inputmanager.toString()+"\n");
+		if(!outputmanager.toString().isEmpty())
+            state.output("Remaining Output: "+outputmanager.toString()+'\n');
+        this.inputmanager.clearBuffer();
+    	this.outputmanager.clearBuffer();
     	this.state.clearIOChannelBuffer();
     }
     /**
