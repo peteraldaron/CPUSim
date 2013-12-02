@@ -35,6 +35,7 @@ public class ConcreteChannel implements IOChannel {
     public ConcreteChannel(String n, IOChannel s) {
         this.state = s;
         this.name = n;
+        this.inputmanager=new InputManager();
     }
     
     /**
@@ -95,25 +96,72 @@ public class ConcreteChannel implements IOChannel {
 				else return outputResult;
     		}
     		else{
-    			state.output("\n"+"Illegal integer detected, "
+    			state.output('\n'+"Illegal integer detected, "
                             +"input discarded:"
-                            +inputmanager.toString()+"\n");
+                            +inputmanager.toString()+'\n');
+                //reset inputmanager:
+                this.inputmanager.setBuffer("");
     		}
     	}
+        //call yourself again
+        return this.readLong(numBits);
     }
     
     /**
      * Uses the state to read an ASCII character from the channel.
      */
     public char readAscii() {
-        return state.readAscii();
+    	//if inputmanager is empty, get the input from the states(channels).
+    	if(inputmanager.isEmpty()){
+    		//have the state getting the input
+    		state.readAscii();
+    		inputmanager.setBuffer(state.getInput());
+    	}
+    	//if inputmanager is not empty, 
+        if(!this.inputmanager.isEmpty()){
+                //if not empty, get next input:
+            String output=this.inputmanager.nextInput("ASCII");
+            if(!output.equals("")){
+                //if input is valid:
+                return output.charAt(0);
+    		}
+    		else{
+    	    	state.output('\n'+"Illegal Ascii detected, "
+    	    		             	+"input discarded:"
+    	        					+inputmanager.toString()+'\n');
+                //reset inputmanager:
+                this.inputmanager.setBuffer("");
+    		}
+    	}
+        return this.readAscii();
     }
     
     /**
      * Uses the state to read a Unicode character from the channel.
      */
     public char readUnicode() {
-        return state.readUnicode();
+    	//if inputmanager is empty, get the input from the states(channels).
+    	if(inputmanager.isEmpty()){
+    		//have the state getting the input
+    		state.readUnicode();
+    		inputmanager.setBuffer(state.getInput());
+    	}
+    	if(!this.inputmanager.isEmpty()){
+            //if not empty, get next input:
+    		String output=this.inputmanager.nextInput("Unicode");
+    		if(!output.equals("")){
+    			//if input is valid:
+				return output.charAt(0);
+    		}
+    		else{
+    	    	state.output('\n'+"Illegal Unicode detected, "
+    	    		             	+"input discarded:"
+    	        					+inputmanager.toString()+'\n');
+                //reset inputmanager:
+                this.inputmanager.setBuffer("");
+    		}
+    	}
+        return this.readUnicode();
     }
     
     /**

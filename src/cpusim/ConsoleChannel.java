@@ -43,7 +43,6 @@ public class ConsoleChannel implements IOChannel {
 	private OutputManager outputmanager;
 	
 	private String userInput;
-	private String output;
 	/**
 	 * Constructor for new Console Channel. There is only
 	 * one Console channel that is used, however, look in
@@ -135,11 +134,12 @@ public class ConsoleChannel implements IOChannel {
 							}
 						}
 						else 
-							inputmanager.setBuffer(enteredText);
+                            //set userinput:
+							//inputmanager.setBuffer(enteredText);
+                            userInput=enteredText;
 						// reset
 						ioConsole.setEditable(false);
 						done = true;
-						return;
 					}
         		});
     }
@@ -154,48 +154,11 @@ public class ConsoleChannel implements IOChannel {
      */
     public long readLong(int numBits) {
     	readingType = Type.Long;
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Long");
-    		if(!output.equals("")){
-    			//if input is valid:
-				long outputResult=Convert.fromAnyBaseStringToLong(output);
-				if(!Convert.fitsInBits(outputResult, numBits)){
-					try {
-	    	    		FXUtilities.runAndWait(new Runnable() {
-	    	    			public void run() {
-	    	    				ioConsole.appendText(LINE_SEPARATOR+"number of bits invalid, "
-	    	    		             	+"enter again."
-	    	        					+inputmanager.toString()+LINE_SEPARATOR);
-	    	                }
-	    	            });
-	    	        } catch (Exception e) {
-	    	            throw new ExecutionException("An Exception was thrown" +
-	    	                    " when we attempted to write a value to the console.");
-	    			}
-				
-    			}
-				else return outputResult;
-    		}
-    		else{
-    			try {
-    	    		FXUtilities.runAndWait(new Runnable() {
-    	    			public void run() {
-    	    				ioConsole.appendText(LINE_SEPARATOR+"Illegal integer detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+LINE_SEPARATOR);
-    	                }
-    	            });
-    	        } catch (Exception e) {
-    	            throw new ExecutionException("An Exception was thrown" +
-    	                    " when we attempted to write a value to the console.");
-    			}
-    		}
-    	}
-    	readUserInput();
-    	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-    		return readLong(numBits);
-    	else return 0;
+        //TODO:fix
+    	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)){
+    	    readUserInput();
+        }
+        return 0;
     }
 
     /**
@@ -206,32 +169,9 @@ public class ConsoleChannel implements IOChannel {
      */
     public char readAscii() {
     	readingType = Type.ASCII;
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("ASCII");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    			try {
-    	    		FXUtilities.runAndWait(new Runnable() {
-    	    			public void run() {
-    	    				ioConsole.appendText(LINE_SEPARATOR+"Illegal Ascii detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+LINE_SEPARATOR);
-    	                }
-    	            });
-    	        } catch (Exception e) {
-    	            throw new ExecutionException("An Exception was thrown" +
-    	                    " when we attempted to write a value to the console.");
-    			}
-    		}
-    	}
-    	readUserInput();
     	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-    		return readAscii();
-    	else return ' ';
+    	    readUserInput();
+    	return ' ';
     }
 
     /**
@@ -242,30 +182,6 @@ public class ConsoleChannel implements IOChannel {
      */
     public char readUnicode() {
     	readingType = Type.Unicode;
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Unicode");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    			try {
-    	    		FXUtilities.runAndWait(new Runnable() {
-    	    			public void run() {
-    	    				ioConsole.appendText(LINE_SEPARATOR+"Illegal Unicode detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+LINE_SEPARATOR);
-    	                }
-    	            });
-    	        } catch (Exception e) {
-    	            throw new ExecutionException("An Exception was thrown" +
-    	                    " when we attempted to write a value to the console.");
-    			}
-    			
-    		}
-    		
-    	}
     	readUserInput();
     	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
     		return readUnicode();
@@ -456,7 +372,7 @@ public class ConsoleChannel implements IOChannel {
      */
     public String getInput(){
     	//return the empty string
-    	return "";
+    	return this.userInput;
     }
     
 }
