@@ -1,6 +1,8 @@
 /**
  * File: CommandLineChannel
- * Last update: July 31, 2013
+ * Last update: November 2013
+ * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
+ * Methods added: clearIOChannelBuffer
  */
 package cpusim;
 
@@ -117,5 +119,18 @@ public class CommandLineChannel implements IOChannel {
     public String toString() {
         return "Command Line Channel";
     }
+    
+    /**
+     * currently commandlinechannel does not use io buffers
+     * do not do anything
+     */
+    public void clearIOChannelBuffer(){
+    	
+    }
+    //TODO:to be changed
+    public String getInput(){
+    	return "";
+    }
+    public void setOutput(String output){}
 
 }
