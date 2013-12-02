@@ -271,4 +271,19 @@ public class FileChannel implements IOChannel  {
     public void clearIOChannelBuffer(){
     	
     }
+    
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public void output(String s){}
+    
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public String getInput(){
+    	//return the empty string
+    	return "";
+    }
 }
