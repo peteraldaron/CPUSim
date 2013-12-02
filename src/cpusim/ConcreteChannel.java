@@ -261,7 +261,7 @@ public class ConcreteChannel implements IOChannel {
         this.state.clearIOChannelBuffer();
     }
     /**
-     * Does not use this method. 
+     * This class does not use this method. 
      * added here for inheritance compatibility
      */
     public void output(String s){}

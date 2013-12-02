@@ -206,7 +206,8 @@ public class ConsoleChannel implements IOChannel {
         
         while (!done && !inputCancelled) {
             try {
-                inputCancelled = mediator.getMachine().getRunMode() == Machine.RunModes.ABORT;
+                inputCancelled = mediator.getMachine().getRunMode() 
+                        ==Machine.RunModes.ABORT;
                 Thread.sleep(10);
             }
             catch (InterruptedException e) {
