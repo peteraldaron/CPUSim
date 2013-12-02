@@ -70,6 +70,7 @@ public class ConcreteChannel implements IOChannel {
      * able to fit into.
      */
     public long readLong(int numBits) {
+    	//if inputmanager is empty, get the input from the states(channels).
     	if(inputmanager.isEmpty()){
     		inputmanager.setBuffer(state.getInput());
     	}

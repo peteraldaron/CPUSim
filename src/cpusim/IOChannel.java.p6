@@ -1,6 +1,8 @@
 /**
  * File: IOChannel
- * LastUpdate: August 2013
+ * LastUpdate: November 2013
+ * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
+ * Methods added: clearIOChannelBuffer
  */
 
 package cpusim;
@@ -65,5 +67,11 @@ public interface IOChannel extends CPUSimConstants {
 
     /** reset the input and output */
     public void reset();
-
+    
+    /**
+     * clear the iochannel input/output buffer if the implemented class
+     * used a buffer
+     */
+    public void clearIOChannelBuffer();
+    
 }

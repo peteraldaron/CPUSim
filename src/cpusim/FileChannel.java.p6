@@ -1,11 +1,14 @@
 /**
  * File: FileChannel
  * Author: Dale Skrien
- * Last Update: August 2013
+ * Last update: November 2013
+ * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
+ * Method added: clearIOChannelBuffer
  */
 package cpusim;
 
 import cpusim.util.*;
+
 import java.io.*;
 
 /**
@@ -261,5 +264,11 @@ public class FileChannel implements IOChannel  {
     public String getID() {
         return file.toString();
     }
-
+    /**
+     * File channel does not have io buffers.
+     * don't do anything.
+     */
+    public void clearIOChannelBuffer(){
+    	
+    }
 }

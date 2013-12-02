@@ -1,14 +1,15 @@
 /**
  * File: ConsoleChannel
- * LastUpdate: November 2013
- * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
- * Methods added: clearIOChannelBuffer, readUserInput
- * Methods modified: all but reset and toString
- * Fields removed: numBits, needToDeleteEnter, valueFromUser
- * Fields added: inputmanager, outputmanager
- * 
- * This class implements IOChannel using the Console in CPUSim
+ * Last update: August 2013
  */
+/**
+ * File: ConsoleChannel
+ * Authors: Joseph Harwood and Jake Epstein
+ * Date: 11/15/13
+ *
+ * Implemented the missing body of the reset() method;
+ */
+
 package cpusim;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -28,22 +29,19 @@ public class ConsoleChannel implements IOChannel {
     
     private static enum Type {Long, ASCII, Unicode}
     private Type readingType;
+    private int numBits;
     
     private boolean inputStarted;
+	private boolean needToDeleteEnter;
 	private boolean done;
 	private int startCaret;
+	private long valueFromUser;
 	private Mediator mediator;
 	
 	private String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	private boolean inputCancelled;
-	//INPUT buf
-	private InputManager inputmanager;
-	//Output buf
-	private OutputManager outputmanager;
 	
-	private String userInput;
-	private String output;
 	/**
 	 * Constructor for new Console Channel. There is only
 	 * one Console channel that is used, however, look in
@@ -56,8 +54,6 @@ public class ConsoleChannel implements IOChannel {
         this.ioConsole = null;
         readingType = Type.Long;
         inputCancelled = false;
-        this.inputmanager=new InputManager();
-        this.outputmanager=new OutputManager();
     }
     
     /**
@@ -68,6 +64,7 @@ public class ConsoleChannel implements IOChannel {
     public void setMediator(Mediator med) {
     	this.mediator = med;
     	this.ioConsole = med.getDesktopController().getIOConsole();
+    	
     	ioConsole.setEditable(false);
         ioConsole.setOnKeyPressed(
         		new EventHandler<KeyEvent>() {
@@ -90,57 +87,120 @@ public class ConsoleChannel implements IOChannel {
         						}
         					}
         					else if (event.getCode().equals(KeyCode.ENTER)) {
-        						handleEnter();
-								return;
+        						inputStarted = false;
+        						String enteredText = (ioConsole.getText(startCaret, ioConsole.getText().length()));
+        						if (readingType == Type.Long){
+        							enteredText = enteredText.trim();
+        						}
+        						
+        						ioConsole.appendText(LINE_SEPARATOR);
+        						
+        						// Output directions if the user asks for "help"
+        						if(enteredText.toLowerCase().equals("help")) {
+        							switch(readingType) {
+        							case Long:
+        								ioConsole.appendText( "Type in a decimal, binary, or hexadecimal " +
+        										"integer. " +
+        										"For binary, use a prefix of \"0b\" or \"-0b\"." +
+        										"For hexadecimal, use " +
+        										"\"0x\" or \"-0x\"." + LINE_SEPARATOR +
+        										"To halt execution, use the Stop menu item from the Execute menu."
+        										+LINE_SEPARATOR); 
+        								break;
+        							case ASCII:
+        								ioConsole.appendText("Type in a character with no surrounding " +
+        										"quotes and then press Enter/Return." + LINE_SEPARATOR +
+        										"To halt execution, use the Stop menu item from the Execute menu."
+        										+LINE_SEPARATOR);
+        								break;
+        							case Unicode:
+        								ioConsole.appendText("Type in a character with no surrounding " +
+        										"quotes and then press Enter." + LINE_SEPARATOR +
+        										"To halt execution, use the Stop menu item from the Execute menu."
+        										+LINE_SEPARATOR);
+        								break;
+        							default:
+        								break;
+        							}
+        						}
+        						
+        						// Get inputted value
+        						switch(readingType) {
+        						case Long:
+        							try {
+        								valueFromUser = Convert.fromAnyBaseStringToLong(enteredText);
+        							} catch(NumberFormatException nfe) {
+        								ioConsole.appendText("Error. You must enter an integer." + 
+        										LINE_SEPARATOR + getPrompt());
+        								needToDeleteEnter = true;
+            							return;
+        							}
+        							break;
+        						case ASCII:
+        						case Unicode:
+        							if (enteredText.length() > 0) {
+        								valueFromUser = (long) enteredText.charAt(0);
+        							} else {
+        								valueFromUser = -1;
+        							}
+        							break;
+        						}
+        						
+        						
+        						// Check for validity
+        						boolean validInput = false;
+        						String errorMessage = "";
+        						
+        						switch(readingType) {
+        						case Long:
+        							validInput = Convert.fitsInBits(valueFromUser, numBits);
+        							errorMessage = "Not enough bits to store " +
+        									"the given int. Number of bits = "+numBits+".";
+        							break;
+        						case ASCII:
+        							validInput = (0 <= valueFromUser && valueFromUser <= 255);
+        							errorMessage = "Character entered is not a valid ASCII character.";
+        							break;
+        						case Unicode:
+        							validInput = (0 <= valueFromUser && valueFromUser <= 65535);
+        							errorMessage = "Character entered is not a valid Unicode character.";
+        							break;
+        						default:
+        							break;
+        						}
+        						
+        						// Correct for errors
+        						if (!validInput) {
+        							ioConsole.appendText(errorMessage);
+        							ioConsole.appendText(LINE_SEPARATOR+getPrompt());
+    								needToDeleteEnter = true;
+        							return;
+        						}
+        						
+        						// reset
+        						ioConsole.setEditable(false);
+        						done = true;
+        						return;
         					}
 
         					inputStarted = true;
         				}
         			}
-        			
-        			//handleEnter method
-        			//deals with storing the input to buffer once enter is hit
-					private void handleEnter() {
-						inputStarted = false;
-						String enteredText = (ioConsole.getText(startCaret, ioConsole.getText().length()));
-						
-						ioConsole.appendText(LINE_SEPARATOR);
-						
-						// Output directions if the user asks for "help"
-						if(enteredText.toLowerCase().equals("help")) {
-							switch(readingType) {
-							case Long:
-								ioConsole.appendText( "Type in a decimal, binary, or hexadecimal " +
-										"integer. " +
-										"For binary, use a prefix of \"0b\" or \"-0b\"." +
-										"For hexadecimal, use " +
-										"\"0x\" or \"-0x\"." + LINE_SEPARATOR +
-										"To halt execution, use the Stop menu item from the Execute menu."
-										+LINE_SEPARATOR); 
-								break;
-							case ASCII:
-								ioConsole.appendText("Type in a character with no surrounding " +
-										"quotes and then press Enter/Return." + LINE_SEPARATOR +
-										"To halt execution, use the Stop menu item from the Execute menu."
-										+LINE_SEPARATOR);
-								break;
-							case Unicode:
-								ioConsole.appendText("Type in a character with no surrounding " +
-										"quotes and then press Enter." + LINE_SEPARATOR +
-										"To halt execution, use the Stop menu item from the Execute menu."
-										+LINE_SEPARATOR);
-								break;
-							default:
-								break;
-							}
-						}
-						else 
-							inputmanager.setBuffer(enteredText);
-						// reset
-						ioConsole.setEditable(false);
-						done = true;
-						return;
-					}
+        		});
+
+        ioConsole.setOnKeyReleased(
+        		new EventHandler<KeyEvent>() {
+        			@Override
+        			public void handle(KeyEvent event) {
+        				if (needToDeleteEnter) {
+        					if (event.getCode().equals(KeyCode.ENTER)) {
+        						String content = ioConsole.getText();
+        						ioConsole.setText(ioConsole.getText(0, content.length()-1));
+        						ioConsole.positionCaret(content.length());
+        						needToDeleteEnter = false;
+        					}
+        				}
+        			}
         		});
     }
     
@@ -153,130 +213,9 @@ public class ConsoleChannel implements IOChannel {
      * @throws ExecutionException if it cannot read a long.
      */
     public long readLong(int numBits) {
+    	this.numBits = numBits;
     	readingType = Type.Long;
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Long");
-    		if(!output.equals("")){
-    			//if input is valid:
-				long outputResult=Convert.fromAnyBaseStringToLong(output);
-				if(!Convert.fitsInBits(outputResult, numBits)){
-					try {
-	    	    		FXUtilities.runAndWait(new Runnable() {
-	    	    			public void run() {
-	    	    				ioConsole.appendText(LINE_SEPARATOR+"number of bits invalid, "
-	    	    		             	+"enter again."
-	    	        					+inputmanager.toString()+LINE_SEPARATOR);
-	    	                }
-	    	            });
-	    	        } catch (Exception e) {
-	    	            throw new ExecutionException("An Exception was thrown" +
-	    	                    " when we attempted to write a value to the console.");
-	    			}
-				
-    			}
-				else return outputResult;
-    		}
-    		else{
-    			try {
-    	    		FXUtilities.runAndWait(new Runnable() {
-    	    			public void run() {
-    	    				ioConsole.appendText(LINE_SEPARATOR+"Illegal integer detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+LINE_SEPARATOR);
-    	                }
-    	            });
-    	        } catch (Exception e) {
-    	            throw new ExecutionException("An Exception was thrown" +
-    	                    " when we attempted to write a value to the console.");
-    			}
-    		}
-    	}
-    	readUserInput();
-    	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-    		return readLong(numBits);
-    	else return 0;
-    }
-
-    /**
-     * returns the next ASCII char from input.
-     *
-     * @return the ASCII character read
-     * @throws ExecutionException if it cannot read an ASCII char.
-     */
-    public char readAscii() {
-    	readingType = Type.ASCII;
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("ASCII");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    			try {
-    	    		FXUtilities.runAndWait(new Runnable() {
-    	    			public void run() {
-    	    				ioConsole.appendText(LINE_SEPARATOR+"Illegal Ascii detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+LINE_SEPARATOR);
-    	                }
-    	            });
-    	        } catch (Exception e) {
-    	            throw new ExecutionException("An Exception was thrown" +
-    	                    " when we attempted to write a value to the console.");
-    			}
-    		}
-    	}
-    	readUserInput();
-    	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-    		return readAscii();
-    	else return ' ';
-    }
-
-    /**
-     * returns the next Unicode char from input.
-     *
-     * @return the Unicode character read
-     * @throws ExecutionException if it cannot read an Unicode char.
-     */
-    public char readUnicode() {
-    	readingType = Type.Unicode;
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Unicode");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    			try {
-    	    		FXUtilities.runAndWait(new Runnable() {
-    	    			public void run() {
-    	    				ioConsole.appendText(LINE_SEPARATOR+"Illegal Unicode detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+LINE_SEPARATOR);
-    	                }
-    	            });
-    	        } catch (Exception e) {
-    	            throw new ExecutionException("An Exception was thrown" +
-    	                    " when we attempted to write a value to the console.");
-    			}
-    			
-    		}
-    		
-    	}
-    	readUserInput();
-    	if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-    		return readUnicode();
-    	else return ' ';
-    }
-
-    //reads user input
-    //prompts the user to input by setting ioconsole as editable
-    private void readUserInput() {
-        
-		try {
+    	try {
     		Platform.runLater(new Runnable() {
     			public void run() {
     				ioConsole.appendText(getPrompt());
@@ -308,20 +247,113 @@ public class ConsoleChannel implements IOChannel {
     	done = false;
         inputCancelled = false;
         inputStarted = false;
-	}
-    
+        return valueFromUser;
+    }
+
     /**
-     * writes the given long value to the outputbuffer
+     * returns the next ASCII char from input.
+     *
+     * @return the ASCII character read
+     * @throws ExecutionException if it cannot read an ASCII char.
+     */
+    public char readAscii() {
+    	readingType = Type.ASCII;
+    	try {
+    		Platform.runLater(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText(getPrompt());
+    				ioConsole.setEditable(true);
+                }
+            });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to read a value from the console.");
+		}
+    	while (!done && !inputCancelled) {
+        	try {
+        		inputCancelled = mediator.getMachine().getRunMode() == Machine.RunModes.ABORT;
+        		Thread.sleep(10);
+			}
+			catch (InterruptedException e) {
+				System.out.println("Error while sleeping thread");
+			}
+        }
+    	if (inputCancelled) {
+    		Platform.runLater(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText(LINE_SEPARATOR);
+    				ioConsole.setEditable(false);
+                }
+            });
+    	}
+    	done = false;
+        inputCancelled = false;
+        inputStarted = false;
+        return (char) valueFromUser;
+    }
+
+    /**
+     * returns the next Unicode char from input.
+     *
+     * @return the Unicode character read
+     * @throws ExecutionException if it cannot read an Unicode char.
+     */
+    public char readUnicode() {
+    	readingType = Type.Unicode;
+    	try {
+    		Platform.runLater(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText(getPrompt());
+    				ioConsole.setEditable(true);
+                }
+            });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to read a value from the console.");
+		}
+    	while (!done && !inputCancelled) {
+        	try {
+        		inputCancelled = mediator.getMachine().getRunMode() == Machine.RunModes.ABORT;
+        		Thread.sleep(10);
+			}
+			catch (InterruptedException e) {
+				System.out.println("Error while sleeping thread");
+			}
+        }
+    	if (inputCancelled) {
+    		Platform.runLater(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText(LINE_SEPARATOR);
+    				ioConsole.setEditable(false);
+                }
+            });
+    	}
+    	done = false;
+        inputCancelled = false;
+        inputStarted = false;
+        return (char) valueFromUser;
+    }
+
+    /**
+     * writes the given long value to the output
      *
      * @param longValue the long value to be output
      */
     public void writeLong(final long longValue) {
-    	//just add the output since this will not be a '\n'
-    	outputmanager.addOutput(String.valueOf(longValue)+ " ");
+    	try {
+    		FXUtilities.runAndWait(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText("Output: "+longValue+LINE_SEPARATOR);
+                }
+            });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to write a value to the console.");
+		}
     }
 
     /**
-     * writes the given long value to the outputbuffer as an ASCII value
+     * writes the given long value to the output as an ASCII value
      *
      * @param longValue the long value to be output
      * @throws ExecutionException if the long is not an ASCII char
@@ -330,24 +362,16 @@ public class ConsoleChannel implements IOChannel {
         if (longValue > 255 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an ASCII value.");
-        if(longValue=='\n'){
-	        try {
-	    		FXUtilities.runAndWait(new Runnable() {
-	    			public void run() {
-	    				ioConsole.appendText("Output: "+outputmanager.toString()+LINE_SEPARATOR);
-	    				//clear:
-	    				outputmanager.clearBuffer();
-	                }
-	            });
-	        } catch (Exception e) {
-	            throw new ExecutionException("An Exception was thrown" +
-	                    " when we attempted to write a value to the console.");
-			}
-        }
-        //otherwise keep on appending
-        else{
-        	this.outputmanager.addOutput(String.valueOf((char)longValue));
-        }
+        try {
+    		FXUtilities.runAndWait(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText("Output: "+((char)longValue)+LINE_SEPARATOR);
+                }
+            });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to write a value to the console.");
+		}
     }
 
     /**
@@ -360,68 +384,25 @@ public class ConsoleChannel implements IOChannel {
         if (longValue > 65535 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an Unicode value.");
-        if(longValue=='\n'){
-	        try {
-	    		FXUtilities.runAndWait(new Runnable() {
-	    			public void run() {
-	    				ioConsole.appendText("Output: "+outputmanager.toString()+LINE_SEPARATOR);
-	    				//clear:
-	    				outputmanager.clearBuffer();
-	                }
-	            });
-	        } catch (Exception e) {
-	            throw new ExecutionException("An Exception was thrown" +
-	                    " when we attempted to write a value to the console.");
-			}
-        }
-        //otherwise keep on appending
-	    else{
-	    	this.outputmanager.addOutput(String.valueOf((char)longValue));
-	    }
-    	
+        try {
+    		FXUtilities.runAndWait(new Runnable() {
+    			public void run() {
+    				ioConsole.appendText("Output: "+((char)longValue)+LINE_SEPARATOR);
+                }
+            });
+        } catch (Exception e) {
+            throw new ExecutionException("An Exception was thrown" +
+                    " when we attempted to write a value to the console.");
+		}
     }
 
     /** 
      * Reset the input and output. 
      */
     public void reset() {
+    	ioConsole.clear();
     }
-    
-    /**
-     * clear the iochannel buffer
-     * called in the machine's listener
-     */
-    public void clearIOChannelBuffer(){
-    	//flush & reset the buffers:
-		if(!inputmanager.toString().isEmpty()){
-			try {
-	    		FXUtilities.runAndWait(new Runnable() {
-	    			public void run() {
-						ioConsole.appendText("Flushing Input: "+inputmanager.toString()+LINE_SEPARATOR);
-	                }
-	            });
-	        } catch (Exception e) {
-	            throw new ExecutionException("An Exception was thrown" +
-	                    " when we attempted to write a value to the console.");
-			}
-		}
-		if(!outputmanager.toString().isEmpty()){
-			try {
-	    		FXUtilities.runAndWait(new Runnable() {
-	    			public void run() {
-	    				ioConsole.appendText("Remaining Output: "
-	    							+outputmanager.toString()
-	    							+LINE_SEPARATOR);
-	                }
-	            });
-	        } catch (Exception e) {
-	            throw new ExecutionException("An Exception was thrown" +
-	                    " when we attempted to write a value to the console.");
-			}
-		}
-    	inputmanager.clearBuffer();
-    	outputmanager.clearBuffer();
-    }
+
     /**
      * Gives a string representation of the object.
      * In this case, its name field.
@@ -431,7 +412,15 @@ public class ConsoleChannel implements IOChannel {
     }
     
     private String getPrompt() {
-    	return "Enter input(s):";
+    	switch(readingType) {
+    	case Long:
+    		return "Enter an integer: ";
+    	case ASCII:
+    		return "Enter an ASCII character: ";
+    	case Unicode:
+    		return "Enter a Unicode character: ";
+    	}
+    	return "Enter an integer: ";
     }
     
 }
