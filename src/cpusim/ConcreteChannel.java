@@ -45,7 +45,7 @@ public class ConcreteChannel implements IOChannel {
      * uses to execute any instructions.
      */
     public ConcreteChannel(IOChannel ioc) {
-    	this(null, ioc);
+        this(null, ioc);
     }
     
     /**
@@ -64,7 +64,7 @@ public class ConcreteChannel implements IOChannel {
      * uses to execute any instructions.
      */
     public void setState(IOChannel c) { 
-    	this.state = c; 
+        this.state = c; 
     }
     
     /**
@@ -74,35 +74,35 @@ public class ConcreteChannel implements IOChannel {
      * able to fit into.
      */
     public long readLong(int numBits) {
-    	//if inputmanager is empty, get the input from the states(channels).
-    	if(inputmanager.isEmpty()){
-    		//have the state getting the input
-    		state.readLong(numBits);
-    		inputmanager.setBuffer(state.getInput());
-    	}
-    	//if inputmanager is not empty, 
-    	if(!this.inputmanager.isEmpty()){
-    		//if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Long");
-    		if(!output.equals("")){
-    			//if input is valid:
-				long outputResult=Convert.fromAnyBaseStringToLong(output);
-				if(!Convert.fitsInBits(outputResult, numBits)){
-					state.output("\n"
+        //if inputmanager is empty, get the input from the states(channels).
+        if(inputmanager.isEmpty()){
+            //have the state getting the input
+            state.readLong(numBits);
+            inputmanager.setBuffer(state.getInput());
+        }
+        //if inputmanager is not empty, 
+        if(!this.inputmanager.isEmpty()){
+            //if not empty, get next input:
+            String output=this.inputmanager.nextInput("Long");
+            if(!output.equals("")){
+                //if input is valid:
+                long outputResult=Convert.fromAnyBaseStringToLong(output);
+                if(!Convert.fitsInBits(outputResult, numBits)){
+                    state.output("\n"
                                  +"number of bits invalid, "
-	    	    		         +"enter again."
-	    	        			 +inputmanager.toString()+"\n");
-    		}
-				else return outputResult;
-    		}
-    		else{
-    			state.output('\n'+"Illegal integer detected, "
+                                 +"enter again."
+                                 +inputmanager.toString()+"\n");
+            }
+                else return outputResult;
+            }
+            else{
+                state.output('\n'+"Illegal integer detected, "
                             +"input discarded:"
                             +inputmanager.toString()+'\n');
                 //reset inputmanager:
                 this.inputmanager.setBuffer("");
-    		}
-    	}
+            }
+        }
         //call yourself again
         return this.readLong(numBits);
     }
@@ -111,28 +111,28 @@ public class ConcreteChannel implements IOChannel {
      * Uses the state to read an ASCII character from the channel.
      */
     public char readAscii() {
-    	//if inputmanager is empty, get the input from the states(channels).
-    	if(inputmanager.isEmpty()){
-    		//have the state getting the input
-    		state.readAscii();
-    		inputmanager.setBuffer(state.getInput());
-    	}
-    	//if inputmanager is not empty, 
+        //if inputmanager is empty, get the input from the states(channels).
+        if(inputmanager.isEmpty()){
+            //have the state getting the input
+            state.readAscii();
+            inputmanager.setBuffer(state.getInput());
+        }
+        //if inputmanager is not empty, 
         if(!this.inputmanager.isEmpty()){
                 //if not empty, get next input:
             String output=this.inputmanager.nextInput("ASCII");
             if(!output.equals("")){
                 //if input is valid:
                 return output.charAt(0);
-    		}
-    		else{
-    	    	state.output('\n'+"Illegal Ascii detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+'\n');
+            }
+            else{
+                state.output('\n'+"Illegal Ascii detected, "
+                                     +"input discarded:"
+                                    +inputmanager.toString()+'\n');
                 //reset inputmanager:
                 this.inputmanager.setBuffer("");
-    		}
-    	}
+            }
+        }
         return this.readAscii();
     }
     
@@ -140,27 +140,27 @@ public class ConcreteChannel implements IOChannel {
      * Uses the state to read a Unicode character from the channel.
      */
     public char readUnicode() {
-    	//if inputmanager is empty, get the input from the states(channels).
-    	if(inputmanager.isEmpty()){
-    		//have the state getting the input
-    		state.readUnicode();
-    		inputmanager.setBuffer(state.getInput());
-    	}
-    	if(!this.inputmanager.isEmpty()){
+        //if inputmanager is empty, get the input from the states(channels).
+        if(inputmanager.isEmpty()){
+            //have the state getting the input
+            state.readUnicode();
+            inputmanager.setBuffer(state.getInput());
+        }
+        if(!this.inputmanager.isEmpty()){
             //if not empty, get next input:
-    		String output=this.inputmanager.nextInput("Unicode");
-    		if(!output.equals("")){
-    			//if input is valid:
-				return output.charAt(0);
-    		}
-    		else{
-    	    	state.output('\n'+"Illegal Unicode detected, "
-    	    		             	+"input discarded:"
-    	        					+inputmanager.toString()+'\n');
+            String output=this.inputmanager.nextInput("Unicode");
+            if(!output.equals("")){
+                //if input is valid:
+                return output.charAt(0);
+            }
+            else{
+                state.output('\n'+"Illegal Unicode detected, "
+                                     +"input discarded:"
+                                    +inputmanager.toString()+'\n');
                 //reset inputmanager:
                 this.inputmanager.setBuffer("");
-    		}
-    	}
+            }
+        }
         return this.readUnicode();
     }
     
@@ -206,19 +206,19 @@ public class ConcreteChannel implements IOChannel {
      * @return - the current state (IOChannel).
      */
     public IOChannel getChannel() {
-    	return state;
+        return state;
     }
     
     /**
      * Gives a string representation of the Concrete channel.
      */
     public String toString() { 
-    	if (state == null) {
-    		return name; 
-    	}
-    	else {
-    		return state.toString();
-    	}
+        if (state == null) {
+            return name; 
+        }
+        else {
+            return state.toString();
+        }
     }
     
     /**
@@ -226,13 +226,13 @@ public class ConcreteChannel implements IOChannel {
      */
     public void clearIOChannelBuffer(){
         //reset the buffer:
-    	if(!inputmanager.toString().isEmpty())
+        if(!inputmanager.toString().isEmpty())
             state.output("Flushing Input: "+inputmanager.toString()+"\n");
-		if(!outputmanager.toString().isEmpty())
+        if(!outputmanager.toString().isEmpty())
             state.output("Remaining Output: "+outputmanager.toString()+'\n');
         this.inputmanager.clearBuffer();
-    	this.outputmanager.clearBuffer();
-    	this.state.clearIOChannelBuffer();
+        this.outputmanager.clearBuffer();
+        this.state.clearIOChannelBuffer();
     }
     /**
      * Does not use this method. 
@@ -245,7 +245,7 @@ public class ConcreteChannel implements IOChannel {
      * added here for inheritance compatibility
      */
     public String getInput(){
-    	//return the empty string
-    	return "";
+        //return the empty string
+        return "";
     }
 }
