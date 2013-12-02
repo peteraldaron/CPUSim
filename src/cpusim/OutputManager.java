@@ -14,29 +14,29 @@
 package cpusim;
 import java.lang.StringBuilder;
 public class OutputManager {
-	private StringBuilder stb;
-	public OutputManager(){
-		this.stb=new StringBuilder("");
-	}
-	/**
-	 * takes each output and add it to the string
-	 * until a new line character is entered.
-	 * @param output 
-	 */
-	public void addOutput(String output){
-		stb.append(output);
-	}
-	/**
-	 * @return the string that represents the input
-	 */
-	public String toString(){
-		return stb.toString();
-	}
-	/**
-	 * the clear function that clears the input buffer
-	 */
-	public void clearBuffer(){
-		this.stb=new StringBuilder("");
-	}
+    private StringBuilder stb;
+    public OutputManager(){
+        this.stb=new StringBuilder("");
+    }
+    /**
+     * takes each output and add it to the string
+     * until a new line character is entered.
+     * @param output 
+     */
+    public void addOutput(String output){
+        stb.append(output);
+    }
+    /**
+     * @return the string that represents the input
+     */
+    public String toString(){
+        return stb.toString();
+    }
+    /**
+     * the clear function that clears the input buffer
+     */
+    public void clearBuffer(){
+        this.stb=new StringBuilder("");
+    }
 
 }

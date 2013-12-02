@@ -14,7 +14,7 @@ import cpusim.util.CPUSimConstants;
  * must implement.
  */
 public interface IOChannel extends CPUSimConstants {
-	
+    
     /**
      * returns the next integer from input as a long that fits in the given
      * number of bits.  If it doesn't fit, a NumberFormatException is thrown.
