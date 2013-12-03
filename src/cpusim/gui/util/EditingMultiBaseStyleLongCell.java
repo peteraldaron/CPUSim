@@ -220,10 +220,30 @@ public class EditingMultiBaseStyleLongCell<T> extends TableCell<T, Long> {
             this.valid = true;
         }
         else if ( base.getBase().equals("ASCII") ){
-        	if(s.length() > 1 || ((int) s.charAt(0)) > 255){
-        		this.valid = false;
-        		errorMessage = "Please enter a valid ASCII char";
+        	int allowedASCIIChars = cellSize/8;
+    		if(cellSize%8!=0)
+    			allowedASCIIChars++;
+        	if(s.length()> allowedASCIIChars ){
+        		this.valid=false;
+        		errorMessage = "The input is too long, only " + allowedASCIIChars
+        						+ " ASCII character(s) allowed.";
         		return;
+        	}
+        	for( int i = 0; i<=string.length-1;i++){
+        		char c = string[i];
+        		if( (int) c > 255){
+        			this.valid = false;
+        			errorMessage = "Please enter a valid ASCII char";
+        			return; 
+        		}
+        		else if( i==0 && s.length()>=allowedASCIIChars && cellSize%8!=0
+        				&& (int) c > Convert.powerOfTwo(cellSize%8) ){
+        			this.valid = false;
+        			errorMessage = "First character overflows number of bits. "
+        							+ "It must have an ASCII code value less than "
+        							+ Convert.powerOfTwo(cellSize%8) + ".";
+        			return;
+        		}
         	}
         	this.valid = true;
         }
