@@ -79,7 +79,7 @@ public class BufferedChannel implements IOChannel {
         if(inputmanager.isEmpty()){
             //have the state getting the input
             //send request:
-            state.writeString("Kirjoitta Nyt:");
+            state.writeString("Enter input:");
             inputmanager.setBuffer(state.readString());
         }
         //if inputmanager is not empty, 
