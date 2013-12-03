@@ -86,6 +86,9 @@ public class DialogChannel implements StringChannel {
      * @param string to be writeString
      */
     public void writeString(final String s){
+        //dont display this message
+        if(s.equals("Enter input:"))
+            return;
         try {
                 FXUtilities.runAndWait(new Runnable() {
                     public void run() {

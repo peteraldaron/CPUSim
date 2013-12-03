@@ -1,6 +1,6 @@
 /**
  * File: CommandLineChannel
- * Last update: November 2013
+ * Last update: December 2013
  * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
  * Methods added: readStirng, writeString 
  * Methods removed:reset, all read and write methods from the IOChannel

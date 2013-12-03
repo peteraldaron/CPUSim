@@ -23,6 +23,7 @@ public class BufferedChannel implements IOChannel {
     private StringChannel state;
     private InputManager inputmanager;
     private OutputManager outputmanager;
+    private int numBits;
     
     /**
      * The constructor to create a ConcreteChannel.
@@ -75,6 +76,7 @@ public class BufferedChannel implements IOChannel {
      * @return the next long value in the input sequence 
      */
     public long readLong(int numBits) {
+        this.numBits=numBits;
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
@@ -82,7 +84,7 @@ public class BufferedChannel implements IOChannel {
             state.writeString("Enter input:");
             String input=state.readString();
             if(input==null){
-            	return 0;
+                return 0;
             }
             else
                 inputmanager.setBuffer(input);
@@ -192,6 +194,10 @@ public class BufferedChannel implements IOChannel {
      */
     public void writeLong(long value) {
         //just add the writeString since this will not be a '\n'
+        if(!Convert.fitsInBits(value, numBits))
+            throw new ExecutionException("Attempt to output integer:"+value+
+                    ", which is greater than "+numBits+" bits. Integer"
+                    + "overflow.");
         outputmanager.addOutput(String.valueOf(value)+ " ");
     }
     
@@ -202,9 +208,10 @@ public class BufferedChannel implements IOChannel {
  writeString to the user.
      */
     public void writeAscii(long longValue) {
-        if (longValue > 255 || longValue < 0)
+        if (longValue > 255 || longValue < 0){
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an ASCII value.");
+        }
         if(longValue=='\n'){
             state.writeString("Output: "+outputmanager.toString()+'\n');
             outputmanager.clearBuffer();
