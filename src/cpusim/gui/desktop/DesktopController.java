@@ -229,9 +229,9 @@ public class DesktopController implements Initializable {
 		rowHeightController = new RowHeightController();
 
 		// Set up channels
-		((DialogChannel) (((ConcreteChannel) (CPUSimConstants.DIALOG_CHANNEL))
+		((DialogChannel) (((BufferedChannel) (CPUSimConstants.DIALOG_CHANNEL))
 				.getChannel())).setStage(stage);
-		((ConsoleChannel) (((ConcreteChannel) (CPUSimConstants.CONSOLE_CHANNEL))
+		((ConsoleChannel) (((BufferedChannel) (CPUSimConstants.CONSOLE_CHANNEL))
 				.getChannel())).setMediator(mediator);
 
 		//initialize the list of controllers
