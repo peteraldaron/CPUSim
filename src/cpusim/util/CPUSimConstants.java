@@ -20,6 +20,7 @@ import cpusim.BufferedChannel;
 import cpusim.ConsoleChannel;
 import cpusim.DialogChannel;
 import cpusim.IOChannel;
+import cpusim.CommandLineChannel;
 import cpusim.module.ConditionBit;
 import cpusim.module.Register;
 
@@ -46,8 +47,8 @@ public interface CPUSimConstants {
             new BufferedChannel(new ConsoleChannel("[Console]"));
     public static final IOChannel DIALOG_CHANNEL =
     		new BufferedChannel(new DialogChannel("[Dialog]"));
-    public static final IOChannel FILE_CHANNEL =
-            new BufferedChannel("File...");
+    public static final IOChannel COMMAND_LINE_CHANNEL =
+            new BufferedChannel(new CommandLineChannel());
 
 }
 

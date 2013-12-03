@@ -12,7 +12,7 @@ import java.util.Scanner;
  * This class implements IOChannel using the terminal/command line.  It is
  * used when CPUSim is run in non-GUI mode.
  */
-public class CommandLineChannel implements IOChannel {
+public class CommandLineChannel implements StringChannel {
 
     Scanner scanner = new Scanner(System.in);
 
@@ -130,14 +130,14 @@ public class CommandLineChannel implements IOChannel {
      * write the given string to the commandline
      * @param String to be output
      */
-    public void output(String s){}
+    public void writeString(String s){}
     
     /**
      * get the input
      *
      */
     //TODO:implement
-    public String getInput(){
+    public String readString(){
         return "";
     }
 
