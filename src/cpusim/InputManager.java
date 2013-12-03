@@ -46,9 +46,9 @@ class InputManager {
 	 */
 	
 	public String nextInput(String type){
-		//parse the string according to type given
-		//if string is empty:
-		if(this.buffer.toString()==null||this.buffer.toString().equals("")){
+		//parse the input buffer string according to type given
+		//if string is empty or null:
+		if(this.buffer.toString()==null || this.buffer.toString().isEmpty()){
 			return "";
 		}
 		if(type.equals("Long")){
@@ -56,7 +56,7 @@ class InputManager {
 		}
 		
 		else if(type.equals("ASCII")){
-			//first make sure that the buffer ain't empty:
+			//first make sure that the buffer isn't empty:
 			if(this.buffer.toString().isEmpty())
 				return "";
 			else{
@@ -65,13 +65,14 @@ class InputManager {
 				if(0 >= asciiChar || asciiChar >= 255){
 					return "";
 				}
+				//Delete the char from the buffer and return the value of it
 				buffer.deleteCharAt(0);
 				return String.valueOf(asciiChar);
 			}
 		}
 		
 		else if(type.equals("Unicode")){
-			//first make sure that the buffer ain't empty:
+			//first make sure that the buffer isn't empty:
 			if(this.buffer.toString().isEmpty())
 				return "";
 			//Checks to see if first char in buffer is a valid unicode char
@@ -95,12 +96,13 @@ class InputManager {
 		
 		// Create a tempBuffer that will be searched through for a valid long
 		StringBuilder tempBuffer = new StringBuilder(buffer);
-		boolean flag = true;
+		
 		// While the string cannot be resolved into a long, shrink the string
 		// and try again
+		boolean flag = true;
 		while( flag ) {
 			try{
-				if( tempBuffer.length() == 0 );
+				if( tempBuffer.length() != 0 );
 					Convert.fromAnyBaseStringToLong( tempBuffer.toString() );
 				
 				flag = false;	// Convert didn't throw an exception, so break;
@@ -111,35 +113,12 @@ class InputManager {
 			}
 		}
 		
-		
-		//checks to see if first long is valid
-		StringBuilder tempLong=new StringBuilder("");
-		boolean isNegative=false;
-		//negative check:
-		if(!buffer.toString().isEmpty() && buffer.charAt(0)=='-' 
-				&& buffer.charAt(1)<='9' && buffer.charAt(1)>='0'){
-			isNegative=true;
-			buffer.deleteCharAt(0);
-		}
-		//Continue to append integers to the tempLong as long as there 
-		//are integers on the top of the buffer
-		while((!buffer.toString().isEmpty()) && (buffer.charAt(0)<='9' 
-				&& buffer.charAt(0)>='0')){
-			tempLong.append(buffer.charAt(0));
-			buffer.deleteCharAt(0);
-		}
-		//make sure the input is not empty and there's a space after the string
-		//that represents long.
-		if(buffer.length()==0 || buffer.charAt(0)==' '){
-			if(buffer.length()!=0 && buffer.charAt(0)==' '){
-				buffer.deleteCharAt(0);
-			}
-			if(isNegative){
-				tempLong.insert(0, '-');
-			}
-			return tempLong.toString();
-		}
-		else return "";
+		if( tempBuffer.length() == 0 )
+			return "";
+		else
+			// Delete the chars that make up the long from the original buffer
+			buffer.delete(0, tempBuffer.length());
+			return tempBuffer.toString();
 	}
 	
 	/**
