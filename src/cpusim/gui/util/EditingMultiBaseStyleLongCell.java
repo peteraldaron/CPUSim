@@ -2,14 +2,6 @@
  * author: Jinghui Yu
  * last edit data: 6/3/2013
  */
-/**
- * Editted by Stephen Jenkins, Brendan Tschaen, Peter Zhang
- * modified methods: 	checkValidity
- * 						convertString
- * 						convertLong
- * 						otherBasesToolTip
- */
-
 
 package cpusim.gui.util;
 
@@ -344,7 +336,8 @@ public class EditingMultiBaseStyleLongCell<T> extends TableCell<T, Long> {
         	return decValue;
         }
         else if (base.getBase().equals("ASCII")){
-        	return Convert.fromAsciiStringToLong(s, cellSize);
+        	int numBitsFromByte = cellSize%8;
+        	return Convert.fromAsciiStringToLong(s, cellSize + numBitsFromByte);
         }
         else { // base is type Decimal
             return Long.parseLong(s);
@@ -372,6 +365,7 @@ public class EditingMultiBaseStyleLongCell<T> extends TableCell<T, Long> {
         	}
         	String x = Convert.fromLongToUnsignedDecString(l, cellSize);
         	long y = Long.parseLong(x);
+        	//return "☐";
         	return Convert.fromLongToAsciiString(y, cellSize+ numZerosAdded);
         }
         else { //base is type Decimal
