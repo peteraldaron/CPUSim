@@ -13,7 +13,7 @@
  */
 package cpusim;
 
-import java.lang.StringBuilder;
+import cpusim.util.Convert;
 
 class InputManager {
 	private StringBuilder buffer;
@@ -89,7 +89,23 @@ class InputManager {
 			buffer.deleteCharAt(0);
 		}
 		
-		
+		// Create a tempBuffer that will be searched through for a valid long
+		StringBuilder tempBuffer = new StringBuilder(buffer);
+		boolean flag = true;
+		// While the string cannot be resolved into a long, shrink the string
+		// and try again
+		while( flag ) {
+			try{
+				if( tempBuffer.length() == 0 );
+					Convert.fromAnyBaseStringToLong( tempBuffer.toString() );
+				
+				flag = false;	// Convert didn't throw an exception, so break;
+			}
+			catch(NumberFormatException e) {
+				// String is not valid integer, so retry with smaller integer
+				tempBuffer.deleteCharAt(tempBuffer.length() - 1);
+			}
+		}
 		
 		
 		//checks to see if first long is valid
