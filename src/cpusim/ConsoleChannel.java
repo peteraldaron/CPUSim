@@ -1,13 +1,14 @@
 /**
  * File: ConsoleChannel
- * LastUpdate: November 2013
+ * LastUpdate: December 2013
  * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
- * Methods added: clearIOChannelBuffer, readUserInput
+ * Methods added: readUserInput, writeString, readString 
  * Methods modified: all but reset and toString
- * Fields removed: numBits, needToDeleteEnter, valueFromUser
- * Fields added: inputmanager, outputmanager
+ * Methods removed: reset, all read and write methods.
+ * Fields removed: readingType,numBits, needToDeleteEnter, valueFromUser
+ * Fileds added:userInput
  * 
- * This class implements IOChannel using the Console in CPUSim
+ * This class implements StringChannel using the Console in CPUSim
  */
 package cpusim;
 import javafx.application.Platform;
@@ -26,7 +27,6 @@ public class ConsoleChannel implements StringChannel {
     private TextArea ioConsole;
     
     private static enum Type {Long, ASCII, Unicode}
-    private Type readingType;
     
     private boolean inputStarted;
     private boolean done;
@@ -48,7 +48,6 @@ public class ConsoleChannel implements StringChannel {
     public ConsoleChannel(String name) {
         this.name = name;
         this.ioConsole = null;
-        readingType = Type.Long;
         inputCancelled = false;
     }
     
@@ -77,7 +76,7 @@ public class ConsoleChannel implements StringChannel {
                             }
 
                             if (event.getCode().equals(KeyCode.BACK_SPACE)) {
-                                if (ioConsole.getCaretPosition() == startCaret) {
+                                if (ioConsole.getCaretPosition() == startCaret){
                                     ioConsole.insertText(startCaret, " ");
                                 }
                             }
@@ -94,20 +93,26 @@ public class ConsoleChannel implements StringChannel {
                     //deals with storing the input to buffer once enter is hit
                     private void handleEnter() {
                         inputStarted = false;
-                        String enteredText = (ioConsole.getText(startCaret, ioConsole.getText().length()));
+                        String enteredText = (ioConsole.getText(startCaret, 
+                                ioConsole.getText().length()));
                         
                         ioConsole.appendText(LINE_SEPARATOR);
                         
                         // Output directions if the user asks for "help"
                         if(enteredText.toLowerCase().equals("help")) {
-                                ioConsole.appendText( "For Integers:Type in decimal, binary, or hexadecimal " +
-                                        "integers. " +
-                                        "For binary, use a prefix of \"0b\" or \"-0b\"." +
-                                        "For hexadecimal, use " +
+                                ioConsole.appendText( "For Integers:Type in" 
+                                        +"decimal, binary, or hexadecimal " 
+                                        +"integers. " 
+                                        +"For binary, use a prefix of" 
+                                        +"\"0b\" or \"-0b\"." 
+                                        +"For hexadecimal, use " +
                                         "\"0x\" or \"-0x\"." + LINE_SEPARATOR);
-                                ioConsole.appendText("For characters: Type in a character with no surrounding " +
-                                        "quotes and then press Enter/Return." + LINE_SEPARATOR +
-                                        "To halt execution, use the Stop menu item from the Execute menu."
+                                ioConsole.appendText("For characters: Type in" 
+                                        +"a character with no surrounding " 
+                                        +"quotes and then press Enter/Return." 
+                                        + LINE_SEPARATOR 
+                                        +"To halt execution, use the Stop" 
+                                        +"menu item from the Execute menu."
                                         +LINE_SEPARATOR);
                         }
                         else if (enteredText.length()>0) 
@@ -192,17 +197,17 @@ public class ConsoleChannel implements StringChannel {
         if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
             && !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP)){
             this.readUserInput();
-	        while (userInput==null || userInput.length()==0){
-		        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
-		            && !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP)){
-		        	this.writeString("Enter Input:");
-		        	this.readUserInput();
-		        }
-		        else break;
-	        }
-	        String output=this.userInput;
-	        this.userInput=null;
-	        return output;
+            while (userInput==null || userInput.length()==0){
+                if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
+                    && !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP)){
+                    this.writeString("Enter Input:");
+                    this.readUserInput();
+                }
+                else break;
+            }
+            String output=this.userInput;
+            this.userInput=null;
+            return output;
         }
         //if machine is aborted or stopped, return null...
         //which is then handled by bufferchannel as the final step.
