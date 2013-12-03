@@ -8,7 +8,6 @@
 package cpusim;
 
 import cpusim.util.Convert;
-import cpusim.util.FXUtilities;
 
 /**
  * This class represents an IOChannel that uses the State pattern to
@@ -19,7 +18,7 @@ import cpusim.util.FXUtilities;
  * channels.
  */
 //TODO: change name to BufferedChannel
-public class ConcreteChannel implements IOChannel {
+public class BufferedChannel implements IOChannel {
     private String name;
     private IOChannel state;
     private InputManager inputmanager;
@@ -32,7 +31,7 @@ public class ConcreteChannel implements IOChannel {
      * @param s - The actual channel this concrete channel
      * uses to execute any instructions.
      */
-    public ConcreteChannel(String n, IOChannel s) {
+    public BufferedChannel(String n, IOChannel s) {
         this.state = s;
         this.name = n;
         this.inputmanager=new InputManager();
@@ -45,7 +44,7 @@ public class ConcreteChannel implements IOChannel {
      * @param ioc - The actual channel this concrete channel
      * uses to execute any instructions.
      */
-    public ConcreteChannel(IOChannel ioc) {
+    public BufferedChannel(IOChannel ioc) {
         this(null, ioc);
     }
     
@@ -54,7 +53,7 @@ public class ConcreteChannel implements IOChannel {
      * 
      * @param n - The name of the channel.
      */
-    public ConcreteChannel(String n) {
+    public BufferedChannel(String n) {
         this(n, null);
     }
     

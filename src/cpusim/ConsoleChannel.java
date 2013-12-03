@@ -15,7 +15,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import cpusim.util.Convert;
 import cpusim.util.FXUtilities;
 
 /**

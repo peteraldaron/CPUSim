@@ -16,7 +16,7 @@
 
 package cpusim.util;
 
-import cpusim.ConcreteChannel;
+import cpusim.BufferedChannel;
 import cpusim.ConsoleChannel;
 import cpusim.DialogChannel;
 import cpusim.IOChannel;
@@ -43,11 +43,11 @@ public interface CPUSimConstants {
 
     // the three standard options available for io channels
     public static final IOChannel CONSOLE_CHANNEL =
-            new ConcreteChannel(new ConsoleChannel("[Console]"));
+            new BufferedChannel(new ConsoleChannel("[Console]"));
     public static final IOChannel DIALOG_CHANNEL =
-    		new ConcreteChannel(new DialogChannel("[Dialog]"));
+    		new BufferedChannel(new DialogChannel("[Dialog]"));
     public static final IOChannel FILE_CHANNEL =
-            new ConcreteChannel("File...");
+            new BufferedChannel("File...");
 
 }
 
