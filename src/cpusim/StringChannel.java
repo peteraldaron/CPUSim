@@ -8,8 +8,8 @@ package cpusim;
 import cpusim.util.CPUSimConstants;
 
 /**
- * Interface that any channels we want to use for input or output
- * must implement.
+ * Interface that any channels we want to use for input or writeString
+ must implement.
  */
 public interface StringChannel extends CPUSimConstants {
 
@@ -17,11 +17,11 @@ public interface StringChannel extends CPUSimConstants {
      * get user input string
      * @return 
      */
-    public String getInput();
+    public String readString();
     
     /**
-     * set output to channel
-     * @param string to be output 
+     * set writeString to channel
+     * @param string to be writeString 
      */
-    public void output(String out);
+    public void writeString(String out);
 }

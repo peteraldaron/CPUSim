@@ -13,8 +13,6 @@
 package cpusim;
 
 import javafx.scene.control.Dialogs;
-//import cpusim.ConsoleChannel.Type;
-import cpusim.util.Convert;
 import cpusim.util.FXUtilities;
 import javafx.stage.Stage;
 
@@ -84,10 +82,10 @@ public class DialogChannel implements StringChannel {
     }
     
     /**
-     * output the string to a dialog
-     * @param string to be output
+     * writeString the string to a dialog
+     * @param string to be writeString
      */
-    public void output(final String s){
+    public void writeString(final String s){
         try {
                 FXUtilities.runAndWait(new Runnable() {
                     public void run() {
@@ -106,7 +104,7 @@ public class DialogChannel implements StringChannel {
     /**
      * get the input in the dialog
      */
-    public String getInput(){
+    public String readString(){
         this.readUserInput();
         return input;
     }

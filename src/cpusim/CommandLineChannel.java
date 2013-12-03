@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 /**
  * This class implements IOChannel using the terminal/command line.  It is
- * used when CPU Sim is run in non-GUI mode.
+ * used when CPUSim is run in non-GUI mode.
  */
 public class CommandLineChannel implements IOChannel {
 
