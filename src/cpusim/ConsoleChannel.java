@@ -144,7 +144,6 @@ public class ConsoleChannel implements StringChannel {
         try {
             Platform.runLater(new Runnable() {
                 public void run() {
-                    ioConsole.appendText(getPrompt());
                     ioConsole.setEditable(true);
                 }
             });
@@ -183,15 +182,11 @@ public class ConsoleChannel implements StringChannel {
     public String toString() {
         return name;
     }
-    
-    private String getPrompt() {
-        return "Enter input(s):";
-    }
     /**
-     * output the string to the console
-     * @param String to be output
+     * writeString the string to the console
+     * @param String to be writeString
      */
-    public void output(final String s){
+    public void writeString(final String s){
         try {
             FXUtilities.runAndWait(new Runnable() {
                 public void run() {
@@ -208,7 +203,7 @@ public class ConsoleChannel implements StringChannel {
      * get input from the console.
      * added here for inheritance compatibility
      */
-    public String getInput(){
+    public String readString(){
         //call get user input to prompt user:
         if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
             this.readUserInput();

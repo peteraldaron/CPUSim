@@ -78,7 +78,9 @@ public class BufferedChannel implements IOChannel {
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
-            inputmanager.setBuffer(state.getInput());
+            //send request:
+            state.writeString("Kirjoitta Nyt:");
+            inputmanager.setBuffer(state.readString());
         }
         //if inputmanager is not empty, 
         if(!this.inputmanager.isEmpty()){
@@ -88,7 +90,7 @@ public class BufferedChannel implements IOChannel {
                 //if input is valid:
                 long outputResult=Convert.fromAnyBaseStringToLong(output);
                 if(!Convert.fitsInBits(outputResult, numBits)){
-                    state.output("\n"
+                    state.writeString("\n"
                                  +"number of bits invalid, "
                                  +"enter again."
                                  +inputmanager.toString()+"\n");
@@ -96,7 +98,7 @@ public class BufferedChannel implements IOChannel {
                 else return outputResult;
             }
             else{
-                state.output('\n'+"Illegal integer detected, "
+                state.writeString('\n'+"Illegal integer detected, "
                             +"input discarded:"
                             +inputmanager.toString()+'\n');
                 //reset inputmanager:
@@ -115,7 +117,9 @@ public class BufferedChannel implements IOChannel {
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
-            inputmanager.setBuffer(state.getInput());
+            //send request:
+            state.writeString("Enter Input:");
+            inputmanager.setBuffer(state.readString());
         }
         //if inputmanager is not empty, 
         if(!this.inputmanager.isEmpty()){
@@ -126,7 +130,7 @@ public class BufferedChannel implements IOChannel {
                 return output.charAt(0);
             }
             else{
-                state.output('\n'+"Illegal Ascii detected, "
+                state.writeString('\n'+"Illegal Ascii detected, "
                                      +"input discarded:"
                                     +inputmanager.toString()+'\n');
                 //reset inputmanager:
@@ -144,7 +148,9 @@ public class BufferedChannel implements IOChannel {
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
-            inputmanager.setBuffer(state.getInput());
+            //send request:
+            state.writeString("Enter Input:");
+            inputmanager.setBuffer(state.readString());
         }
         if(!this.inputmanager.isEmpty()){
             //if not empty, get next input:
@@ -154,7 +160,7 @@ public class BufferedChannel implements IOChannel {
                 return output.charAt(0);
             }
             else{
-                state.output('\n'+"Illegal Unicode detected, "
+                state.writeString('\n'+"Illegal Unicode detected, "
                                      +"input discarded:"
                                     +inputmanager.toString()+'\n');
                 //reset inputmanager:
@@ -165,27 +171,27 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     *  output a Long value to the user.
+     *  writeString a Long value to the user.
      * 
-     * @param value - the value to output to the user.
+     * @param value - the value to writeString to the user.
      */
     public void writeLong(long value) {
-        //just add the output since this will not be a '\n'
+        //just add the writeString since this will not be a '\n'
         outputmanager.addOutput(String.valueOf(value)+ " ");
     }
     
     /**
-     * output an ASCII value to the user.
+     * writeString an ASCII value to the user.
      * 
      * @param longValue - the long value of the character to
-     * output to the user.
+ writeString to the user.
      */
     public void writeAscii(long longValue) {
         if (longValue > 255 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as an ASCII value.");
         if(longValue=='\n'){
-            state.output("Output: "+outputmanager.toString()+'\n');
+            state.writeString("Output: "+outputmanager.toString()+'\n');
             outputmanager.clearBuffer();
         }
         //otherwise keep on appending
@@ -195,17 +201,17 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     *  output a Unicode value to the user.
+     *  writeString a Unicode value to the user.
      * 
      * @param longValue - the long value of the Unicode character
-     * to output to the user.
+ to writeString to the user.
      */
     public void writeUnicode(long longValue) {
         if (longValue > 65535 || longValue < 0)
             throw new ExecutionException("Attempt to output the value " +
                     longValue + " as a Unicode value.");
         if(longValue=='\n'){ 
-            state.output("Output value: " + outputmanager.toString());
+            state.writeString("Output value: " + outputmanager.toString());
         }
         //otherwise keep on appending
         else{
@@ -246,9 +252,9 @@ public class BufferedChannel implements IOChannel {
     public void clearIOChannelBuffer(){
         //reset the buffer:
         if(!inputmanager.toString().isEmpty())
-            state.output("Flushing Input: "+inputmanager.toString()+"\n");
+            state.writeString("Flushing Input: "+inputmanager.toString()+"\n");
         if(!outputmanager.toString().isEmpty())
-            state.output("Remaining Output: "+outputmanager.toString()+'\n');
+            state.writeString("Remaining Output: "+outputmanager.toString()+'\n');
         this.inputmanager.clearBuffer();
         this.outputmanager.clearBuffer();
     }
