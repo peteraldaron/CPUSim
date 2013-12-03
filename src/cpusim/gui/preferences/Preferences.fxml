@@ -165,7 +165,7 @@
                         <Label layoutX="5.0" layoutY="185.0" text="Print preview" />
                         <Label layoutX="5.0" layoutY="201.0" text="Print setup" />
                         <Label layoutX="5.0" layoutY="217.0" text="Print" />
-                        <Label layoutX="5.0" layoutY="225.0" text="Saatana" />
+                        <Label layoutX="5.0" layoutY="225.0" text="Clear Console" />
                         <Label layoutX="5.0" layoutY="233.0" text="Toggle Comment" />
                         <Label layoutX="5.0" layoutY="249.0" text="Find" />
                         <Label layoutX="5.0" layoutY="265.0" text="Preferences" />
