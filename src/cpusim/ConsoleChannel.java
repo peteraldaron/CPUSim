@@ -126,7 +126,7 @@ public class ConsoleChannel implements StringChannel {
                                 break;
                             }
                         }
-                        else 
+                        else if (enteredText.length()!=0) 
                             //set userinput:
                             //inputmanager.setBuffer(enteredText);
                             userInput=enteredText;
@@ -211,6 +211,7 @@ public class ConsoleChannel implements StringChannel {
         else{
             return null;
         }
+        //System.out.println("cc-rs,input="+userInput.charAt(0));
         return this.userInput;
     }
     

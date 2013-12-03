@@ -82,7 +82,8 @@ public class BufferedChannel implements IOChannel {
             state.writeString("Enter input:");
             String input=state.readString();
             if(input==null){
-                return 0;
+                long l;
+                return l;
             }
             else
                 inputmanager.setBuffer(input);
