@@ -132,42 +132,6 @@ public class DialogChannel implements IOChannel {
      * @throws ExecutionException if the long is not an ASCII char
      */
     public void writeAscii(final long longValue) {
-        /*
-        if (longValue > 255 || longValue < 0)
-            throw new ExecutionException("Attempt to output the value " +
-                    longValue + " as an ASCII value.");
-        if(longValue=='\n'){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        result = Dialogs.showConfirmDialog(stage,
-                                "Output value: " + outputmanager.toString(),
-                                "ASCII output", 
-                                "Dialog Channel", 
-                                Dialogs.DialogOptions.OK_CANCEL);
-                    }
-                });
-            } catch (InterruptedException e) {
-                // This usually happens if the user picks "Stop".  But the output dialog
-                // is modal and so we can't pick "Stop", and instead the user must
-                // click the "Abort" button in the dialog, so we need do nothing here.
-            } catch (java.util.concurrent.ExecutionException e) {
-                //Don't know how to handle this exception, so let's just
-                //throw an ExecutionException
-                throw new ExecutionException("An InvocationTargetException was thrown" +
-                        " when we attempted to write the ASCII value " +
-                        ((char) longValue) + " to the user in a dialog.");
-            }
-            if (result == Dialogs.DialogResponse.CANCEL) {
-                // The user chose "Abort" from the output dialog
-                throw new ExecutionException("Abort requested.");
-            }
-        }
-        //otherwise keep on appending
-        else{
-            this.outputmanager.addOutput(String.valueOf((char)longValue));
-        }
-       */ 
     }
 
     /**
@@ -177,42 +141,6 @@ public class DialogChannel implements IOChannel {
      * @throws ExecutionException if the long is not an Unicode char
      */
     public void writeUnicode(final long longValue) {
-        /*
-        if (longValue > 65535 || longValue < 0)
-            throw new ExecutionException("Attempt to output the value " +
-                    longValue + " as a Unicode value.");
-        if(longValue=='\n'){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        result = Dialogs.showConfirmDialog(stage,
-                                "Output value: " + outputmanager.toString(),
-                                "Unicode output", 
-                                "Dialog Channel", 
-                                Dialogs.DialogOptions.OK_CANCEL);
-                    }
-                });
-            } catch (InterruptedException e) {
-                // This usually happens if the user picks "Stop".  But the output dialog
-                // is modal and so we can't pick "Stop", and instead the user must
-                // click the "Abort" button in the dialog, so we need do nothing here.
-            } catch (java.util.concurrent.ExecutionException e) {
-                // Don't know how to handle this exception, so let's just
-                // throw an ExecutionException
-                throw new ExecutionException("An InvocationTargetException was thrown" +
-                        " when we \nattempted to write the Unicode value " +
-                        ((char) longValue) + " to the user in a dialog.");
-            }
-            if (result == Dialogs.DialogResponse.CANCEL) {
-                // The user chose "Abort" from the output dialog
-                throw new ExecutionException("Abort requested.");
-            }
-        }
-        //otherwise keep on appending
-        else{
-            this.outputmanager.addOutput(String.valueOf((char)longValue));
-        }
-        */
     }
 
     /** 
@@ -226,43 +154,6 @@ public class DialogChannel implements IOChannel {
      * called in the machine's listener
      */
     public void clearIOChannelBuffer(){
-        
-        //now handled by concretechannel
-        //reset the buffer:
-        
-        /*
-        if(!inputmanager.toString().isEmpty()){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        Dialogs.showErrorDialog(stage,
-                                "Flushing Input: "+inputmanager.toString()+"\n", 
-                                "Flushing", 
-                                "Dialog Channel");
-                    }
-                });
-            } catch (Exception e) {
-                throw new ExecutionException("An Exception was thrown" +
-                        " when we attempted to read from the console.");
-            }
-        }
-        if(!outputmanager.toString().isEmpty())
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        Dialogs.showErrorDialog(stage,
-                                "Remaining Output: "+outputmanager.toString()+'\n',
-                                "Flushing", 
-                                "Dialog Channel");
-                    }
-                });
-            } catch (Exception e) {
-                throw new ExecutionException("An Exception was thrown" +
-                        " when we attempted to read from the console.");
-            }
-        this.inputmanager.clearBuffer();
-        this.outputmanager.clearBuffer();
-        */
     }
 
     /**

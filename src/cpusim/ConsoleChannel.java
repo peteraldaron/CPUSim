@@ -245,29 +245,6 @@ public class ConsoleChannel implements IOChannel {
      * @throws ExecutionException if the long is not an ASCII char
      */
     public void writeAscii(final long longValue) {
-        /*
-        if (longValue > 255 || longValue < 0)
-            throw new ExecutionException("Attempt to output the value " +
-                    longValue + " as an ASCII value.");
-        if(longValue=='\n'){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        ioConsole.appendText("Output: "+outputmanager.toString()+LINE_SEPARATOR);
-                        //clear:
-                        outputmanager.clearBuffer();
-                    }
-                });
-            } catch (Exception e) {
-                throw new ExecutionException("An Exception was thrown" +
-                        " when we attempted to write a value to the console.");
-            }
-        }
-        //otherwise keep on appending
-        else{
-            this.outputmanager.addOutput(String.valueOf((char)longValue));
-        }
-        */
     }
 
     /**
@@ -277,29 +254,6 @@ public class ConsoleChannel implements IOChannel {
      * @throws ExecutionException if the long is not an Unicode char
      */
     public void writeUnicode(final long longValue) {
-        /*
-        if (longValue > 65535 || longValue < 0)
-            throw new ExecutionException("Attempt to output the value " +
-                    longValue + " as an Unicode value.");
-        if(longValue=='\n'){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        ioConsole.appendText("Output: "+outputmanager.toString()+LINE_SEPARATOR);
-                        //clear:
-                        outputmanager.clearBuffer();
-                    }
-                });
-            } catch (Exception e) {
-                throw new ExecutionException("An Exception was thrown" +
-                        " when we attempted to write a value to the console.");
-            }
-        }
-        //otherwise keep on appending
-        else{
-            this.outputmanager.addOutput(String.valueOf((char)longValue));
-        }
-        */        
     }
 
     /** 
@@ -313,37 +267,6 @@ public class ConsoleChannel implements IOChannel {
      * called in the machine's listener
      */
     public void clearIOChannelBuffer(){
-        //flush & reset the buffers:
-        /*
-        if(!inputmanager.toString().isEmpty()){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        ioConsole.appendText("Flushing Input: "+inputmanager.toString()+LINE_SEPARATOR);
-                    }
-                });
-            } catch (Exception e) {
-                throw new ExecutionException("An Exception was thrown" +
-                        " when we attempted to write a value to the console.");
-            }
-        }
-        if(!outputmanager.toString().isEmpty()){
-            try {
-                FXUtilities.runAndWait(new Runnable() {
-                    public void run() {
-                        ioConsole.appendText("Remaining Output: "
-                                    +outputmanager.toString()
-                                    +LINE_SEPARATOR);
-                    }
-                });
-            } catch (Exception e) {
-                throw new ExecutionException("An Exception was thrown" +
-                        " when we attempted to write a value to the console.");
-            }
-        }
-        inputmanager.clearBuffer();
-        outputmanager.clearBuffer();
-        */
     }
     /**
      * Gives a string representation of the object.
