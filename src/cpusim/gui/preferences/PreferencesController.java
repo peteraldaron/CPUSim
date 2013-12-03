@@ -582,8 +582,6 @@ public class PreferencesController implements Initializable {
 
 				}
 
-
-
 				keyBindings.set(keyBindingsPane.getChildren().indexOf(currLabel), kbString);
 				updateKeyBindingDisplay();
 				stopListening();
