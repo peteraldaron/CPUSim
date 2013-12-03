@@ -102,7 +102,7 @@ class InputManager {
 		boolean flag = true;
 		while( flag ) {
 			try{
-				if( tempBuffer.length() != 0 );
+				if( tempBuffer.length() != 0 )
 					Convert.fromAnyBaseStringToLong( tempBuffer.toString() );
 				
 				flag = false;	// Convert didn't throw an exception, so break;
