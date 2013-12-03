@@ -100,36 +100,20 @@ public class ConsoleChannel implements StringChannel {
                         
                         // Output directions if the user asks for "help"
                         if(enteredText.toLowerCase().equals("help")) {
-                            switch(readingType) {
-                            case Long:
-                                ioConsole.appendText( "Type in a decimal, binary, or hexadecimal " +
-                                        "integer. " +
+                                ioConsole.appendText( "For Integers:Type in decimal, binary, or hexadecimal " +
+                                        "integers. " +
                                         "For binary, use a prefix of \"0b\" or \"-0b\"." +
                                         "For hexadecimal, use " +
-                                        "\"0x\" or \"-0x\"." + LINE_SEPARATOR +
-                                        "To halt execution, use the Stop menu item from the Execute menu."
-                                        +LINE_SEPARATOR); 
-                                break;
-                            case ASCII:
-                                ioConsole.appendText("Type in a character with no surrounding " +
+                                        "\"0x\" or \"-0x\"." + LINE_SEPARATOR);
+                                ioConsole.appendText("For characters: Type in a character with no surrounding " +
                                         "quotes and then press Enter/Return." + LINE_SEPARATOR +
                                         "To halt execution, use the Stop menu item from the Execute menu."
                                         +LINE_SEPARATOR);
-                                break;
-                            case Unicode:
-                                ioConsole.appendText("Type in a character with no surrounding " +
-                                        "quotes and then press Enter." + LINE_SEPARATOR +
-                                        "To halt execution, use the Stop menu item from the Execute menu."
-                                        +LINE_SEPARATOR);
-                                break;
-                            default:
-                                break;
-                            }
                         }
                         else if (enteredText.length()>0) 
-                            //set userinput:
-                            //inputmanager.setBuffer(enteredText);
+                        {
                             userInput=enteredText;
+                        }
                         // reset
                         ioConsole.setEditable(false);
                         done = true;
@@ -211,7 +195,6 @@ public class ConsoleChannel implements StringChannel {
 	        while (userInput==null || userInput.length()==0){
 		        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
 		            && !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP)){
-		        	this.writeString("Input Invalid. Enter again:\n");
 		        	this.writeString("Enter Input:");
 		        	this.readUserInput();
 		        }
