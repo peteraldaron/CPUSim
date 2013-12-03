@@ -205,8 +205,12 @@ public class ConsoleChannel implements StringChannel {
      */
     public String readString(){
         //call get user input to prompt user:
-        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
+        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
+            || !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP))
             this.readUserInput();
+        else{
+            return null;
+        }
         return this.userInput;
     }
     

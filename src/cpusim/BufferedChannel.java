@@ -80,7 +80,12 @@ public class BufferedChannel implements IOChannel {
             //have the state getting the input
             //send request:
             state.writeString("Enter input:");
-            inputmanager.setBuffer(state.readString());
+            String input=state.readString();
+            if(input==null){
+                return 0;
+            }
+            else
+                inputmanager.setBuffer(input);
         }
         //if inputmanager is not empty, 
         if(!this.inputmanager.isEmpty()){
@@ -110,7 +115,7 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * Uses the state to read ASCII characters from the channel.
+     * read ASCII characters from the channel.
      * @return the next character in the input sequencce 
      */
     public char readAscii() {
@@ -119,7 +124,12 @@ public class BufferedChannel implements IOChannel {
             //have the state getting the input
             //send request:
             state.writeString("Enter Input:");
-            inputmanager.setBuffer(state.readString());
+            String input=state.readString();
+            if(input==null){
+                return 0;
+            }
+            else
+                inputmanager.setBuffer(input);
         }
         //if inputmanager is not empty, 
         if(!this.inputmanager.isEmpty()){
@@ -141,7 +151,7 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * Uses the state to read a Unicode characters from the channel.
+     * read Unicode characters from the channel.
      * @return the next character in the input sequencce 
      */
     public char readUnicode() {
@@ -150,7 +160,12 @@ public class BufferedChannel implements IOChannel {
             //have the state getting the input
             //send request:
             state.writeString("Enter Input:");
-            inputmanager.setBuffer(state.readString());
+            String input=state.readString();
+            if(input==null){
+                return 0;
+            }
+            else
+                inputmanager.setBuffer(input);
         }
         if(!this.inputmanager.isEmpty()){
             //if not empty, get next input:
@@ -171,7 +186,7 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     *  writeString a Long value to the user.
+     *  write a Long value to the output.
      * 
      * @param value - the value to writeString to the user.
      */
@@ -181,7 +196,7 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * writeString an ASCII value to the user.
+     * write an ASCII value to the output.
      * 
      * @param longValue - the long value of the character to
  writeString to the user.
@@ -201,10 +216,9 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     *  writeString a Unicode value to the user.
+     *  write a Unicode value to the output.
      * 
-     * @param longValue - the long value of the Unicode character
- to writeString to the user.
+     * @param longValue - the long value of the Unicode character to writeString to the user.
      */
     public void writeUnicode(long longValue) {
         if (longValue > 65535 || longValue < 0)
@@ -247,7 +261,8 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * call state's cleariochannelbuffer method
+     * cleariochannelbuffer method
+     * clears the buffers in this channel
      */
     public void clearIOChannelBuffer(){
         //reset the buffer:
