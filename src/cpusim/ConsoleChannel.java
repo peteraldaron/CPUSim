@@ -21,7 +21,7 @@ import cpusim.util.FXUtilities;
  * This class implements IOChannel using a console that appears as a
  * panel along the bottom edge of the main CPU Sim desktop.
  */
-public class ConsoleChannel implements IOChannel {
+public class ConsoleChannel implements StringChannel {
     private String name; 
     private TextArea ioConsole;
     
@@ -36,10 +36,6 @@ public class ConsoleChannel implements IOChannel {
     private String LINE_SEPARATOR = System.getProperty("line.separator");
     
     private boolean inputCancelled;
-    //INPUT buf
-    private InputManager inputmanager;
-    //Output buf
-    private OutputManager outputmanager;
     
     private String userInput;
     /**
@@ -54,8 +50,6 @@ public class ConsoleChannel implements IOChannel {
         this.ioConsole = null;
         readingType = Type.Long;
         inputCancelled = false;
-        this.inputmanager=new InputManager();
-        this.outputmanager=new OutputManager();
     }
     
     /**
@@ -143,50 +137,6 @@ public class ConsoleChannel implements IOChannel {
                 });
     }
     
-    /**
-     * returns the next integer from input as a long that fits in the given
-     * number of bits. If it doesn't fit, a NumberFormatException is thrown.
-     *
-     * @param numBits the number of bits into which the long must fit
-     * @return the long value that was input
-     * @throws ExecutionException if it cannot read a long.
-     */
-    public long readLong(int numBits) {
-        readingType = Type.Long;
-        //TODO:fix
-        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)){
-            readUserInput();
-        }
-        return 0;
-    }
-
-    /**
-     * returns the next ASCII char from input.
-     *
-     * @return the ASCII character read
-     * @throws ExecutionException if it cannot read an ASCII char.
-     */
-    public char readAscii() {
-        readingType = Type.ASCII;
-        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-            readUserInput();
-        return ' ';
-    }
-
-    /**
-     * returns the next Unicode char from input.
-     *
-     * @return the Unicode character read
-     * @throws ExecutionException if it cannot read an Unicode char.
-     */
-    public char readUnicode() {
-        readingType = Type.Unicode;
-        readUserInput();
-        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
-            return readUnicode();
-        else return ' ';
-    }
-
     //reads user input
     //prompts the user to input by setting ioconsole as editable
     private void readUserInput() {
@@ -227,48 +177,6 @@ public class ConsoleChannel implements IOChannel {
     }
     
     /**
-     * writes the given long value to the outputbuffer
-     *
-     * @param longValue the long value to be output
-     */
-    public void writeLong(final long longValue) {
-        //just add the output since this will not be a '\n'
-        /*
-        outputmanager.addOutput(String.valueOf(longValue)+ " ");
-        */
-    }
-
-    /**
-     * writes the given long value to the outputbuffer as an ASCII value
-     *
-     * @param longValue the long value to be output
-     * @throws ExecutionException if the long is not an ASCII char
-     */
-    public void writeAscii(final long longValue) {
-    }
-
-    /**
-     * writes the given long value to the output as a Unicode value
-     *
-     * @param longValue the long value to be output
-     * @throws ExecutionException if the long is not an Unicode char
-     */
-    public void writeUnicode(final long longValue) {
-    }
-
-    /** 
-     * Reset the input and output. 
-     */
-    public void reset() {
-    }
-    
-    /**
-     * clear the iochannel buffer
-     * called in the machine's listener
-     */
-    public void clearIOChannelBuffer(){
-    }
-    /**
      * Gives a string representation of the object.
      * In this case, its name field.
      */
@@ -301,7 +209,9 @@ public class ConsoleChannel implements IOChannel {
      * added here for inheritance compatibility
      */
     public String getInput(){
-        //return the empty string
+        //call get user input to prompt user:
+        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT))
+            this.readUserInput();
         return this.userInput;
     }
     

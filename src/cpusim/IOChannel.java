@@ -74,19 +74,4 @@ public interface IOChannel extends CPUSimConstants {
      */
     public void clearIOChannelBuffer();
    
-    //on second thought, we definitely need input output handlers in IOChannels(duh?):
-   
-    /**
-     * get the input from channel
-     * @returns a string representation of the input
-     */
-    public String getInput();
-    
-    /**
-     * set output to channel
-     * @param string to be output 
-     */
-    public void output(String out);
-    
-    
 }

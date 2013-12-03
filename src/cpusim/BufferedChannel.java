@@ -20,7 +20,7 @@ import cpusim.util.Convert;
 //TODO: change name to BufferedChannel
 public class BufferedChannel implements IOChannel {
     private String name;
-    private IOChannel state;
+    private StringChannel state;
     private InputManager inputmanager;
     private OutputManager outputmanager;
     
@@ -31,7 +31,7 @@ public class BufferedChannel implements IOChannel {
      * @param s - The actual channel this concrete channel
      * uses to execute any instructions.
      */
-    public BufferedChannel(String n, IOChannel s) {
+    public BufferedChannel(String n, StringChannel s) {
         this.state = s;
         this.name = n;
         this.inputmanager=new InputManager();
@@ -44,7 +44,7 @@ public class BufferedChannel implements IOChannel {
      * @param ioc - The actual channel this concrete channel
      * uses to execute any instructions.
      */
-    public BufferedChannel(IOChannel ioc) {
+    public BufferedChannel(StringChannel ioc) {
         this(null, ioc);
     }
     
@@ -63,21 +63,21 @@ public class BufferedChannel implements IOChannel {
      * @param c - The actual channel this concrete channel
      * uses to execute any instructions.
      */
-    public void setState(IOChannel c) { 
+    public void setState(StringChannel c) { 
         this.state = c; 
     }
     
     /**
-     * Uses the state to read a long from the channel.
+     * read long values from the channel.
      * 
      * @param numBits - the number of bits the long should be 
      * able to fit into.
+     * @return the next long value in the input sequence 
      */
     public long readLong(int numBits) {
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
-            state.readLong(numBits);
             inputmanager.setBuffer(state.getInput());
         }
         //if inputmanager is not empty, 
@@ -108,13 +108,13 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * Uses the state to read an ASCII character from the channel.
+     * Uses the state to read ASCII characters from the channel.
+     * @return the next character in the input sequencce 
      */
     public char readAscii() {
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
-            state.readAscii();
             inputmanager.setBuffer(state.getInput());
         }
         //if inputmanager is not empty, 
@@ -137,13 +137,13 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * Uses the state to read a Unicode character from the channel.
+     * Uses the state to read a Unicode characters from the channel.
+     * @return the next character in the input sequencce 
      */
     public char readUnicode() {
         //if inputmanager is empty, get the input from the states(channels).
         if(inputmanager.isEmpty()){
             //have the state getting the input
-            state.readUnicode();
             inputmanager.setBuffer(state.getInput());
         }
         if(!this.inputmanager.isEmpty()){
@@ -165,19 +165,17 @@ public class BufferedChannel implements IOChannel {
     }
     
     /**
-     * Uses the state to output a Long value to the user.
+     *  output a Long value to the user.
      * 
      * @param value - the value to output to the user.
      */
     public void writeLong(long value) {
         //just add the output since this will not be a '\n'
         outputmanager.addOutput(String.valueOf(value)+ " ");
-        //we can skip the state completely:
-        //state.writeLong(value);
     }
     
     /**
-     * Uses the state to output an ASCII value to the user.
+     * output an ASCII value to the user.
      * 
      * @param longValue - the long value of the character to
      * output to the user.
@@ -194,12 +192,10 @@ public class BufferedChannel implements IOChannel {
         else{
             this.outputmanager.addOutput(String.valueOf((char)longValue));
         }
-        //skipping state:
-        //state.writeAscii(longValue);
     }
     
     /**
-     * Uses the state to output a Unicode value to the user.
+     *  output a Unicode value to the user.
      * 
      * @param longValue - the long value of the Unicode character
      * to output to the user.
@@ -215,14 +211,12 @@ public class BufferedChannel implements IOChannel {
         else{
             this.outputmanager.addOutput(String.valueOf((char)longValue));
         }
-        state.writeUnicode(longValue);
     }
     
     /**
-     * Resets the state.
+     * Doesn't currently do anything. Saved for legacy compatibility.
      */
     public void reset() {
-        state.reset();
     }
     
     /**
@@ -230,7 +224,7 @@ public class BufferedChannel implements IOChannel {
      * 
      * @return - the current state (IOChannel).
      */
-    public IOChannel getChannel() {
+    public StringChannel getChannel() {
         return state;
     }
     
@@ -257,7 +251,6 @@ public class BufferedChannel implements IOChannel {
             state.output("Remaining Output: "+outputmanager.toString()+'\n');
         this.inputmanager.clearBuffer();
         this.outputmanager.clearBuffer();
-        this.state.clearIOChannelBuffer();
     }
     /**
      * This class does not use this method. 
