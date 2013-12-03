@@ -8,6 +8,7 @@
 package cpusim;
 
 import cpusim.util.*;
+
 import java.io.*;
 
 /**
@@ -16,21 +17,21 @@ import java.io.*;
  * and maintains the data to and from the user.
  */
 public class FileChannel implements IOChannel  {
-	// Where to get or send the data
-	private File file;			
-	// Reader for the file for input
-	private PushbackReader reader; 	
-	// Writer for the file for output
-	private FileWriter writer;		
-	
-	/**
-	 * Creates a new File Channel. Note that this file channel
-	 * constructor should probably not be used. The file channel
-	 * that is used is in the CPUSimConstants file, it is the only
-	 * one that is used.
-	 * 
-	 * @param file - The file for the channel to read from or write to.
-	 */
+    // Where to get or send the data
+    private File file;            
+    // Reader for the file for input
+    private PushbackReader reader;     
+    // Writer for the file for output
+    private FileWriter writer;        
+    
+    /**
+     * Creates a new File Channel. Note that this file channel
+     * constructor should probably not be used. The file channel
+     * that is used is in the CPUSimConstants file, it is the only
+     * one that is used.
+     * 
+     * @param file - The file for the channel to read from or write to.
+     */
     public FileChannel(File file) {
         this.file = file;
         this.reader = null;
@@ -152,7 +153,7 @@ public class FileChannel implements IOChannel  {
     public void writeLong(long value) {
         try {
             if (writer == null) {
-            	writer = new FileWriter(file);
+                writer = new FileWriter(file);
             }
             // Start it with a space char
             String longString = " " + value;  
@@ -268,7 +269,21 @@ public class FileChannel implements IOChannel  {
      * don't do anything.
      */
     public void clearIOChannelBuffer(){
-    	
+        
     }
-
+    
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public void output(String s){}
+    
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public String getInput(){
+        //return the empty string
+        return "";
+    }
 }

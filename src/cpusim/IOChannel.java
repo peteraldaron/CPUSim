@@ -14,7 +14,7 @@ import cpusim.util.CPUSimConstants;
  * must implement.
  */
 public interface IOChannel extends CPUSimConstants {
-	
+    
     /**
      * returns the next integer from input as a long that fits in the given
      * number of bits.  If it doesn't fit, a NumberFormatException is thrown.
@@ -73,5 +73,20 @@ public interface IOChannel extends CPUSimConstants {
      * used a buffer
      */
     public void clearIOChannelBuffer();
-
+   
+    //on second thought, we definitely need input output handlers in IOChannels(duh?):
+   
+    /**
+     * get the input from channel
+     * @returns a string representation of the input
+     */
+    public String getInput();
+    
+    /**
+     * set output to channel
+     * @param string to be output 
+     */
+    public void output(String out);
+    
+    
 }

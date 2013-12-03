@@ -1,10 +1,14 @@
 /**
  * File: ConcreteChannel
- * LastUpdate: November 2013
+ * Last Updated: November 2013
  * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
  * Methods added: clearIOChannelBuffer
+ * Fields added: inputmanager, outputmanager
  */
 package cpusim;
+
+import cpusim.util.Convert;
+import cpusim.util.FXUtilities;
 
 /**
  * This class represents an IOChannel that uses the State pattern to
@@ -14,9 +18,12 @@ package cpusim;
  * involve the GUI as needed.  It is up to the GUI to add these state
  * channels.
  */
+//TODO: change name to BufferedChannel
 public class ConcreteChannel implements IOChannel {
     private String name;
     private IOChannel state;
+    private InputManager inputmanager;
+    private OutputManager outputmanager;
     
     /**
      * The constructor to create a ConcreteChannel.
@@ -28,6 +35,8 @@ public class ConcreteChannel implements IOChannel {
     public ConcreteChannel(String n, IOChannel s) {
         this.state = s;
         this.name = n;
+        this.inputmanager=new InputManager();
+        this.outputmanager=new OutputManager();
     }
     
     /**
@@ -37,7 +46,7 @@ public class ConcreteChannel implements IOChannel {
      * uses to execute any instructions.
      */
     public ConcreteChannel(IOChannel ioc) {
-    	this(null, ioc);
+        this(null, ioc);
     }
     
     /**
@@ -56,7 +65,7 @@ public class ConcreteChannel implements IOChannel {
      * uses to execute any instructions.
      */
     public void setState(IOChannel c) { 
-    	this.state = c; 
+        this.state = c; 
     }
     
     /**
@@ -66,21 +75,94 @@ public class ConcreteChannel implements IOChannel {
      * able to fit into.
      */
     public long readLong(int numBits) {
-        return state.readLong(numBits);
+        //if inputmanager is empty, get the input from the states(channels).
+        if(inputmanager.isEmpty()){
+            //have the state getting the input
+            state.readLong(numBits);
+            inputmanager.setBuffer(state.getInput());
+        }
+        //if inputmanager is not empty, 
+        if(!this.inputmanager.isEmpty()){
+            //if not empty, get next input:
+            String output=this.inputmanager.nextInput("Long");
+            if(!output.equals("")){
+                //if input is valid:
+                long outputResult=Convert.fromAnyBaseStringToLong(output);
+                if(!Convert.fitsInBits(outputResult, numBits)){
+                    state.output("\n"
+                                 +"number of bits invalid, "
+                                 +"enter again."
+                                 +inputmanager.toString()+"\n");
+            }
+                else return outputResult;
+            }
+            else{
+                state.output('\n'+"Illegal integer detected, "
+                            +"input discarded:"
+                            +inputmanager.toString()+'\n');
+                //reset inputmanager:
+                this.inputmanager.setBuffer("");
+            }
+        }
+        //call yourself again
+        return this.readLong(numBits);
     }
     
     /**
      * Uses the state to read an ASCII character from the channel.
      */
     public char readAscii() {
-        return state.readAscii();
+        //if inputmanager is empty, get the input from the states(channels).
+        if(inputmanager.isEmpty()){
+            //have the state getting the input
+            state.readAscii();
+            inputmanager.setBuffer(state.getInput());
+        }
+        //if inputmanager is not empty, 
+        if(!this.inputmanager.isEmpty()){
+                //if not empty, get next input:
+            String output=this.inputmanager.nextInput("ASCII");
+            if(!output.equals("")){
+                //if input is valid:
+                return output.charAt(0);
+            }
+            else{
+                state.output('\n'+"Illegal Ascii detected, "
+                                     +"input discarded:"
+                                    +inputmanager.toString()+'\n');
+                //reset inputmanager:
+                this.inputmanager.setBuffer("");
+            }
+        }
+        return this.readAscii();
     }
     
     /**
      * Uses the state to read a Unicode character from the channel.
      */
     public char readUnicode() {
-        return state.readUnicode();
+        //if inputmanager is empty, get the input from the states(channels).
+        if(inputmanager.isEmpty()){
+            //have the state getting the input
+            state.readUnicode();
+            inputmanager.setBuffer(state.getInput());
+        }
+        if(!this.inputmanager.isEmpty()){
+            //if not empty, get next input:
+            String output=this.inputmanager.nextInput("Unicode");
+            if(!output.equals("")){
+                //if input is valid:
+                return output.charAt(0);
+            }
+            else{
+                state.output('\n'+"Illegal Unicode detected, "
+                                     +"input discarded:"
+                                    +inputmanager.toString()+'\n');
+                //reset inputmanager:
+                this.inputmanager.setBuffer("");
+            }
+        }
+        return this.readUnicode();
     }
     
     /**
@@ -89,7 +171,10 @@ public class ConcreteChannel implements IOChannel {
      * @param value - the value to output to the user.
      */
     public void writeLong(long value) {
-        state.writeLong(value);
+        //just add the output since this will not be a '\n'
+        outputmanager.addOutput(String.valueOf(value)+ " ");
+        //we can skip the state completely:
+        //state.writeLong(value);
     }
     
     /**
@@ -99,7 +184,19 @@ public class ConcreteChannel implements IOChannel {
      * output to the user.
      */
     public void writeAscii(long longValue) {
-        state.writeAscii(longValue);
+        if (longValue > 255 || longValue < 0)
+            throw new ExecutionException("Attempt to output the value " +
+                    longValue + " as an ASCII value.");
+        if(longValue=='\n'){
+            state.output("Output: "+outputmanager.toString()+'\n');
+            outputmanager.clearBuffer();
+        }
+        //otherwise keep on appending
+        else{
+            this.outputmanager.addOutput(String.valueOf((char)longValue));
+        }
+        //skipping state:
+        //state.writeAscii(longValue);
     }
     
     /**
@@ -109,6 +206,16 @@ public class ConcreteChannel implements IOChannel {
      * to output to the user.
      */
     public void writeUnicode(long longValue) {
+        if (longValue > 65535 || longValue < 0)
+            throw new ExecutionException("Attempt to output the value " +
+                    longValue + " as a Unicode value.");
+        if(longValue=='\n'){ 
+            state.output("Output value: " + outputmanager.toString());
+        }
+        //otherwise keep on appending
+        else{
+            this.outputmanager.addOutput(String.valueOf((char)longValue));
+        }
         state.writeUnicode(longValue);
     }
     
@@ -125,25 +232,46 @@ public class ConcreteChannel implements IOChannel {
      * @return - the current state (IOChannel).
      */
     public IOChannel getChannel() {
-    	return state;
+        return state;
     }
     
     /**
      * Gives a string representation of the Concrete channel.
      */
     public String toString() { 
-    	if (state == null) {
-    		return name; 
-    	}
-    	else {
-    		return state.toString();
-    	}
+        if (state == null) {
+            return name; 
+        }
+        else {
+            return state.toString();
+        }
     }
     
     /**
      * call state's cleariochannelbuffer method
      */
     public void clearIOChannelBuffer(){
-    	this.state.clearIOChannelBuffer();
+        //reset the buffer:
+        if(!inputmanager.toString().isEmpty())
+            state.output("Flushing Input: "+inputmanager.toString()+"\n");
+        if(!outputmanager.toString().isEmpty())
+            state.output("Remaining Output: "+outputmanager.toString()+'\n');
+        this.inputmanager.clearBuffer();
+        this.outputmanager.clearBuffer();
+        this.state.clearIOChannelBuffer();
+    }
+    /**
+     * This class does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public void output(String s){}
+    
+    /**
+     * Does not use this method. 
+     * added here for inheritance compatibility
+     */
+    public String getInput(){
+        //return the empty string
+        return "";
     }
 }

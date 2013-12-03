@@ -10,30 +10,34 @@
  * 
  * @created November 13, 2013
  * @author Peter Zhang, Brendan Tschaen, Stephen Jenkins
+ * @modified November 22 2013
  */
 package cpusim;
 
 import cpusim.util.Convert;
 
 class InputManager {
-	private StringBuilder buffer;
-	/**
-	 * Constructor
-	 * init the buffer
-	 */
-	public InputManager(){
-		this.buffer=new StringBuilder("");
-	}
-	
-	/**
-	 * set the buffer to the input string
-	 * @param input the string input
-	 */
-	public void setBuffer(String input){
-		//clear the buffer
-		this.buffer=new StringBuilder("");
-		this.buffer.append(input);
-	}
+    private StringBuilder buffer;
+    /**
+     * Constructor
+     * init the buffer
+     */
+    public InputManager(){
+        this.buffer=new StringBuilder("");
+    }
+    
+    /**
+     * set the buffer to the input string
+     * @param input the string input
+     */
+    public void setBuffer(String input){
+        //clear the buffer
+        this.buffer=new StringBuilder("");
+        //deal with null case.
+        if(input==null)
+            this.buffer.append("");
+        this.buffer.append(input);
+    }
 
 	/**
 	 * 
@@ -169,5 +173,5 @@ class InputManager {
 		this.buffer = new StringBuilder("");
 	}
 
-	
+    
 }

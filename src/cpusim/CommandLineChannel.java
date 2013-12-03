@@ -124,8 +124,21 @@ public class CommandLineChannel implements IOChannel {
      * currently commandlinechannel does not use io buffers
      * do not do anything
      */
-    public void clearIOChannelBuffer(){
-    	
+    public void clearIOChannelBuffer(){}
+    
+    /**
+     * write the given string to the commandline
+     * @param String to be output
+     */
+    public void output(String s){}
+    
+    /**
+     * get the input
+     *
+     */
+    //TODO:implement
+    public String getInput(){
+        return "";
     }
 
 }
