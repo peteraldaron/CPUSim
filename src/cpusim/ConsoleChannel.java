@@ -126,7 +126,7 @@ public class ConsoleChannel implements StringChannel {
                                 break;
                             }
                         }
-                        else if (enteredText.length()!=0) 
+                        else if (enteredText.length()>0) 
                             //set userinput:
                             //inputmanager.setBuffer(enteredText);
                             userInput=enteredText;
@@ -204,15 +204,26 @@ public class ConsoleChannel implements StringChannel {
      * added here for inheritance compatibility
      */
     public String readString(){
-        //call get user input to prompt user:
+        //call readuserinput to prompt user:
         if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
-            || !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP))
+            && !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP)){
             this.readUserInput();
-        else{
-            return null;
+	        while (userInput==null || userInput.length()==0){
+		        if(!(mediator.getMachine().getRunMode() == Machine.RunModes.ABORT)
+		            && !(mediator.getMachine().getRunMode() == Machine.RunModes.STOP)){
+		        	this.writeString("Input Invalid. Enter again:\n");
+		        	this.writeString("Enter Input:");
+		        	this.readUserInput();
+		        }
+		        else break;
+	        }
+	        String output=this.userInput;
+	        this.userInput=null;
+	        return output;
         }
-        //System.out.println("cc-rs,input="+userInput.charAt(0));
-        return this.userInput;
+        //if machine is aborted or stopped, return null...
+        //which is then handled by bufferchannel as the final step.
+        else return null;
     }
     
 }

@@ -102,7 +102,6 @@ class InputManager {
 		boolean flag = true;
 		while( flag ) {
 			try{
-                System.out.println("IM-pl:"+tempBuffer);
 				if( tempBuffer.length() != 0 )
 					Convert.fromAnyBaseStringToLong( tempBuffer.toString() );
 				
@@ -114,8 +113,9 @@ class InputManager {
 			}
 		}
 		
-		if( tempBuffer.length() == 0 )
+		if( tempBuffer.length() == 0 ){
 			return "";
+		}
         else{
 			// Delete the chars that make up the long from the original buffer
 			buffer.delete(0, tempBuffer.length());

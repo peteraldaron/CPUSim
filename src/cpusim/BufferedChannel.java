@@ -82,8 +82,7 @@ public class BufferedChannel implements IOChannel {
             state.writeString("Enter input:");
             String input=state.readString();
             if(input==null){
-                long l;
-                return l;
+            	return 0;
             }
             else
                 inputmanager.setBuffer(input);
@@ -96,19 +95,19 @@ public class BufferedChannel implements IOChannel {
                 //if input is valid:
                 long outputResult=Convert.fromAnyBaseStringToLong(output);
                 if(!Convert.fitsInBits(outputResult, numBits)){
-                    state.writeString("\n"
-                                 +"number of bits invalid, "
+                    state.writeString(
+                                 "number of bits invalid, "
                                  +"enter again."
                                  +inputmanager.toString()+"\n");
-            }
+                }
                 else return outputResult;
             }
             else{
-                state.writeString('\n'+"Illegal integer detected, "
+                state.writeString("Illegal integer detected, "
                             +"input discarded:"
                             +inputmanager.toString()+'\n');
                 //reset inputmanager:
-                this.inputmanager.setBuffer("");
+                this.inputmanager.clearBuffer();
             }
         }
         //call yourself again
@@ -141,7 +140,7 @@ public class BufferedChannel implements IOChannel {
                 return output.charAt(0);
             }
             else{
-                state.writeString('\n'+"Illegal Ascii detected, "
+                state.writeString("Illegal Ascii detected, "
                                      +"input discarded:"
                                     +inputmanager.toString()+'\n');
                 //reset inputmanager:
@@ -176,7 +175,7 @@ public class BufferedChannel implements IOChannel {
                 return output.charAt(0);
             }
             else{
-                state.writeString('\n'+"Illegal Unicode detected, "
+                state.writeString("Illegal Unicode detected, "
                                      +"input discarded:"
                                     +inputmanager.toString()+'\n');
                 //reset inputmanager:
