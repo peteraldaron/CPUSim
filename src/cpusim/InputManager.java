@@ -90,10 +90,12 @@ class InputManager {
 	// Parse the next long off the buffer string.
 	private String parseLong() {
 		// Eat up all the spaces before the first int char
-		while( buffer.charAt(0) == ' ') {
+		while( buffer.charAt(0) == ' ' && buffer.length()>0) {
 			buffer.deleteCharAt(0);
+            if(buffer.length()==0){
+                return "";
+            }
 		}
-		
 		// Create a tempBuffer that will be searched through for a valid long
 		StringBuilder tempBuffer = new StringBuilder(buffer);
 		
@@ -102,8 +104,9 @@ class InputManager {
 		boolean flag = true;
 		while( flag ) {
 			try{
-				if( tempBuffer.length() != 0 )
+				if( tempBuffer.length() != 0 ){
 					Convert.fromAnyBaseStringToLong( tempBuffer.toString() );
+                }
 				
 				flag = false;	// Convert didn't throw an exception, so break;
 			}
