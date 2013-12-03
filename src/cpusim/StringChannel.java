@@ -13,6 +13,10 @@ import cpusim.util.CPUSimConstants;
  */
 public interface StringChannel extends CPUSimConstants {
 
+    /**
+     * get user input string
+     * @return 
+     */
     public String getInput();
     
     /**
