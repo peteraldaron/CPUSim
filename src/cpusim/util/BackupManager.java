@@ -21,6 +21,7 @@
 package cpusim.util;
 
 import cpusim.Machine;
+import cpusim.MachineInstruction;
 import cpusim.module.ControlUnit;
 import cpusim.module.RAM;
 import cpusim.module.RAMLocation;
@@ -171,13 +172,18 @@ public class BackupManager
 	public void backupOneMachineInstruction()
 	{
 		if(canBackupOneMachineInstr())
-		{
+		{	
+			
+			//Get the machine instruction that is being backed up
+			MachineInstruction m = ((ControlUnit.State) machineInstructionStack.peek().peek().get("control unit state")).getInstr();
+			if(m != null)
+				System.out.println( m.getName() );
+			
 			while (canBackupOneMicroInstr()){
 				backupOneMicroInstruction();
 			}
 			
-	        //machineInstructionStack.peek();
-
+	        
 			//pop the empty machine instruction
 			machineInstructionStack.pop();
 		}
