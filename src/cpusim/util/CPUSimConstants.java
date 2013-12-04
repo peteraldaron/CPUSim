@@ -45,7 +45,7 @@ public interface CPUSimConstants {
     public static final IOChannel COMMAND_LINE_CHANNEL =
             new BufferedChannel(new CommandLineChannel());
     public static final IOChannel FILE_CHANNEL=
-    		new cpusim.FileChannel(new java.io.File(""));
+    		new cpusim.FileChannel(new java.io.File("[File]"));
 
 }
 
