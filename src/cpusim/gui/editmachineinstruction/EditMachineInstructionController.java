@@ -410,7 +410,7 @@ public class EditMachineInstructionController implements Initializable {
                 }
              }
         });
-
+        
         opcodeTextField.setDisable(true);
 
         opcodeTextField.textProperty().addListener(new ChangeListener<String>() {
@@ -1039,6 +1039,10 @@ public class EditMachineInstructionController implements Initializable {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
                             mouseEvent.getClickCount() == 2){
                         ObservableList<TreeItem> list = microInstrTreeView.getRoot().getChildren();
+                        System.out.println("Das ist kliken");
+                        
+                        //add option to edit comment if instr is comment:
+                        //System.out.println(microLabel.get);
 
                         for (TreeItem<String> t : list){
                             if (t.getValue().equals(micro.getMicroClass())){
