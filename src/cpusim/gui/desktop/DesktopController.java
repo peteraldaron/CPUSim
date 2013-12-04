@@ -389,6 +389,7 @@ public class DesktopController implements Initializable {
 	@FXML
 	protected void handleOpenText(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
+		
 		initFileChooser(fileChooser, "Open Text", true);
 
 		File fileToOpen = fileChooser.showOpenDialog(stage);
@@ -495,6 +496,7 @@ public class DesktopController implements Initializable {
 		}
 
 		FileChooser fileChooser = new FileChooser();
+
 		initFileChooser(fileChooser, "Open Machine", false);
 
 
@@ -547,8 +549,13 @@ public class DesktopController implements Initializable {
 	@FXML
 	protected void handleSaveAsHTMLMachine(ActionEvent event) throws FileNotFoundException {
 		FileChooser fileChooser = new FileChooser();
+		
 		initFileChooser(fileChooser, "Save Machine", false);
-
+		//add additional extension option to view all HTML Machine files
+		//only relevant for this Save dialog
+        fileChooser.getExtensionFilters().add(
+        		new FileChooser.ExtensionFilter("HTML Machine Files (*.html)", "*.html")        		
+        );
 		File fileToSave = fileChooser.showSaveDialog(stage);
 		if (fileToSave == null) {
 			return;
@@ -2008,6 +2015,7 @@ public class DesktopController implements Initializable {
 	 */
 	public void initFileChooser(FileChooser fileChooser, String title, boolean text) {
 		fileChooser.setTitle(title);
+		
 		if (text) {
 			fileChooser.setInitialDirectory(new File(currentTextDirectory));
 		}
@@ -2015,6 +2023,18 @@ public class DesktopController implements Initializable {
                         //CHANGE: current machine directory is now stored in the mediator
 			fileChooser.setInitialDirectory(new File(mediator.getCurrentMachineDirectory()));
 		}
+		//add possible file extensions
+		// options are:
+		//				All Files (*.*)
+		//				Machine Files (*.cpu)
+		//				Assembly Files (*.a or *.asm)
+		String[] assemblyFileExtensions= {"*.a","*.asm"}; 
+        fileChooser.getExtensionFilters().addAll(
+        		new FileChooser.ExtensionFilter("All Files", "*.*"),
+        		new FileChooser.ExtensionFilter("Machine Files (*.cpu)", "*.cpu"),
+        		new FileChooser.ExtensionFilter("Assembly Files (*.a or *.asm)",
+        				assemblyFileExtensions )
+        );
 	}
 
 	/**

@@ -220,9 +220,13 @@ public class EditingMultiBaseStyleLongCell<T> extends TableCell<T, Long> {
             this.valid = true;
         }
         else if ( base.getBase().equals("ASCII") ){
+        	//determining how many possible ascii chars are allowed
         	int allowedASCIIChars = cellSize/8;
+        	//if not a multiple of 8, an extra char MAY be allowed
+        	//depending on the character (this is checked later in the for loop)
     		if(cellSize%8!=0)
     			allowedASCIIChars++;
+    		//guaranteed too many characters
         	if(s.length()> allowedASCIIChars ){
         		this.valid=false;
         		errorMessage = "The input is too long, only " + allowedASCIIChars
@@ -231,11 +235,13 @@ public class EditingMultiBaseStyleLongCell<T> extends TableCell<T, Long> {
         	}
         	for( int i = 0; i<=string.length-1;i++){
         		char c = string[i];
+        		//entered is not a valid ascii char
         		if( (int) c > 255){
         			this.valid = false;
         			errorMessage = "Please enter a valid ASCII char";
         			return; 
         		}
+        		//the first char's ascii value doesn't fit in the number of bits
         		else if( i==0 && s.length()>=allowedASCIIChars && cellSize%8!=0
         				&& (int) c > Convert.powerOfTwo(cellSize%8) ){
         			this.valid = false;
