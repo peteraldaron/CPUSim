@@ -1044,20 +1044,36 @@ public class EditMachineInstructionController implements Initializable {
                         //add option to edit comment if instr is comment:
                         if(microLabel.textProperty().getValue().equals("Comment")){
                         	System.out.println("da");
+                        	
+                        	DialogChannel dc=new DialogChannel("CommentDialog");
+                        	dc.setStage((Stage)implementationFormatPane.getScene().getWindow());
+                        	dc.readString();
+
+                        	/*
                         	final Stage stage=(Stage)implementationFormatPane.getScene().getWindow();
                         	try {
                                 FXUtilities.runAndWait(new Runnable() {
                                     public void run() {
+                                    	System.out.println("running");
                                         Dialogs.showInformationDialog(stage,
                                             "Changing Comment",
                                             "Comment", 
                                             "Comment");
+                                        
                                     }
                                 });
 	                        } catch (Exception e) {
 	                            throw new ExecutionException("An Exception was thrown" +
 	                                    " when we attempted to read from the console.");
 	                        }
+                        	while(true){
+                        		try{
+                    			System.out.println("thread still going:"+Thread.currentThread());
+                    			Thread.sleep(500);
+                        		}
+                        		catch(Exception e){}
+                    		}
+                    		*/
                         }
 
                         for (TreeItem<String> t : list){
