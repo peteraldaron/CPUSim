@@ -26,6 +26,7 @@ import cpusim.gui.util.DragTreeCell;
 import cpusim.microinstruction.End;
 import cpusim.microinstruction.IO;
 import cpusim.util.Convert;
+import cpusim.util.FXUtilities;
 import cpusim.util.Validate;
 import cpusim.util.ValidationException;
 import javafx.animation.KeyFrame;
@@ -1010,7 +1011,6 @@ public class EditMachineInstructionController implements Initializable {
         int i = 0;
         for (final Microinstruction micro : currentInstr.getMicros()){
             final Label microLabel = new Label(micro.getName());
-
             microLabel.setPrefWidth(implementationFormatPane.getPrefWidth());
             microLabel.setPrefHeight(20);
             microLabel.setLayoutY(i);
@@ -1042,7 +1042,23 @@ public class EditMachineInstructionController implements Initializable {
                         System.out.println("Das ist kliken");
                         
                         //add option to edit comment if instr is comment:
-                        //System.out.println(microLabel.get);
+                        if(microLabel.textProperty().getValue().equals("Comment")){
+                        	System.out.println("da");
+                        	final Stage stage=(Stage)implementationFormatPane.getScene().getWindow();
+                        	try {
+                                FXUtilities.runAndWait(new Runnable() {
+                                    public void run() {
+                                        Dialogs.showInformationDialog(stage,
+                                            "Changing Comment",
+                                            "Comment", 
+                                            "Comment");
+                                    }
+                                });
+	                        } catch (Exception e) {
+	                            throw new ExecutionException("An Exception was thrown" +
+	                                    " when we attempted to read from the console.");
+	                        }
+                        }
 
                         for (TreeItem<String> t : list){
                             if (t.getValue().equals(micro.getMicroClass())){
