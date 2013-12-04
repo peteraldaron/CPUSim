@@ -157,6 +157,7 @@ public class BackupManager
                 }
             }
         }
+                
         //now dump the backup state full of these restoration changes.
 		//theoretically, we could save this state for undoing the backup,
 		//if we ever wanted to implement such a feature.
@@ -174,6 +175,9 @@ public class BackupManager
 			while (canBackupOneMicroInstr()){
 				backupOneMicroInstruction();
 			}
+			
+	        //machineInstructionStack.peek();
+
 			//pop the empty machine instruction
 			machineInstructionStack.pop();
 		}
