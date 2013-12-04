@@ -420,7 +420,6 @@ public class EditMachineInstructionController implements Initializable {
                 try{
                     Validate.stringIsLegalBinHexOrDecNumber(newValue);
                     currentInstr.setOpcode(Convert.fromAnyBaseStringToLong(newValue));
-                    System.out.println("allFields: " + allFields);
                     Validate.instructionsOpcodeIsValid(instructions, currentInstr);
                     opcodeTextField.setStyle("-fx-background-color:white;");
                     opcodeTextField.setTooltip(null);

@@ -334,11 +334,7 @@ public class Validate
      */
     public static void opcodeFits(MachineInstruction instr)
     {
-    	System.out.println( "Instruction: " + instr );
-    	System.out.println( "instr.getInstructionFields(): " + instr.getInstructionFields());
-    	System.out.println( "instr.getInstructionFields().get(0): " + instr.getInstructionFields().get(0) );
         int firstFieldLength = instr.getInstructionFields().get(0).getNumBits();
-        System.out.println("FirstFieldLength: " + firstFieldLength);
         long opcode = instr.getOpcode();
         if (opcode >= (long) Math.pow(2, firstFieldLength)) {
             throw new ValidationException("The opcode \"" +
