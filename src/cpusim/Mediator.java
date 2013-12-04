@@ -348,6 +348,7 @@ public class Mediator {
     */
     public void saveAsMachine() {
         FileChooser fileChooser = new FileChooser();
+        
         this.desktopController.initFileChooser(fileChooser, "Save Machine", false);
 
         File fileToSave = fileChooser.showSaveDialog(stage);
