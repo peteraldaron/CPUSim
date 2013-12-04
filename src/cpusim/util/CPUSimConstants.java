@@ -1,19 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-// File:    	CPUSimConstants.java
-// Type:    	java application file
-// Author:		Dale Skrien
-// Project: 	CPU Sim
-// Date:    	June, 2000
-//
-// Description:
-//   This file contains various constants for CPU Sim.
-//
-// To be done:
-
-
-///////////////////////////////////////////////////////////////////////////////
-// the package in which our project resides
-
+/**
+ * File:    	CPUSimConstants.java
+ * Author:		Dale Skrien
+ * Date:    	June, 2000
+ * Project: 	CPU Sim
+ * Description: This file contains various constants for CPU Sim.
+ * Modified: December 2013
+ * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
+ * Field modified: FILE_CHANNEL
+ * Field Added: COMMAND_LINE_CHANNEL
+ */
 package cpusim.util;
 
 import cpusim.BufferedChannel;
@@ -49,7 +44,7 @@ public interface CPUSimConstants {
     		new BufferedChannel(new DialogChannel("[Dialog]"));
     public static final IOChannel COMMAND_LINE_CHANNEL =
             new BufferedChannel(new CommandLineChannel());
-    //TODO:debug this
+    //TODO:FIX this
     public static final IOChannel FILE_CHANNEL=null;
 
 }
