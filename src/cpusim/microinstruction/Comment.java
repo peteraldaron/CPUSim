@@ -1,10 +1,10 @@
-/*
- * File: Comment.java
- * Author: djskrien
- * Class: CS 361
- * Project: 
- * Date: Jun 10, 2010
- */
+/**
+  * File: Comment.java
+  * Author: djskrien
+  * Class: CS 361
+  * Project: 
+  * Date: Jun 10, 2010
+  */
 
 package cpusim.microinstruction;
 
