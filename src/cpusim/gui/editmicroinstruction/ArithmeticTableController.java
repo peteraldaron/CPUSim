@@ -136,7 +136,7 @@ public class ArithmeticTableController
                     public TableCell<Arithmetic, Register> call(
                             TableColumn<Arithmetic, Register> setStringTableColumn) {
                         return new ComboBoxTableCell<Arithmetic,Register>(
-                                machine.getRegisters());
+                                machine.getAllRegisters());
                     }
                 };
 

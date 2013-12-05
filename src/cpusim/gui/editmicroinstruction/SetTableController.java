@@ -137,7 +137,7 @@ public class SetTableController
                     public TableCell<CpusimSet, Register> call(
                             TableColumn<CpusimSet, Register> setStringTableColumn) {
                         return new ComboBoxTableCell<CpusimSet,Register>(
-                                machine.getRegisters());
+                                machine.getAllRegisters());
                     }
                 };
 
