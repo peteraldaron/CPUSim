@@ -1072,7 +1072,7 @@ public class EditMachineInstructionController implements Initializable {
                                         "Comment", 
                                         "Kommentti");
                             if(!(input==null) && !input.equals("")){
-                                micro.setName(input);
+                                micro.setName("//"+input);
                             }
                             updateMicros();
                         } 
