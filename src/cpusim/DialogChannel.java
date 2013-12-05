@@ -8,7 +8,7 @@
  * 
  * For details of each method, see header of methods
  * 
- * This class implements IOChannel using Dialog Boxes.
+ * This class implements StringChannel using Dialog Boxes.
  */
 package cpusim;
 
