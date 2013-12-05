@@ -5,19 +5,63 @@
  */
 
 /**
- *  Edited by Stephen Jenkins, Brendan Tschaen and Peter Zhang
+ * File: DesktopController
+ * Author: Pratap Luitel, Scott Franchi, Stephen Webel
+ * Date: 10/27/13
+ *
+ * Fields removed:
+ *      private SimpleBooleanProperty machineDirty
+ *      private File machineFile
+ *      private SimpleStringProperty machineDirtyString
+ *      private String currentMachineDirectory
+ *
+ * Methods added:
+ *      public ArrayDeque<String> getReopenMachineFiles()
+ *      public void setReopenMachineFiles()
+ *      public ConsoleManager getConsoleManager()
+ *
+ * Methods removed:
+ *      public void machineChanged()
+ *      public SimpleStringProperty getMachineDirtyProperty()
+ *      private void addMachineStateListeners()
+ *      private void saveMachine()
+ *      private void saveAsMachine()
+ *      public void newMachine()
+ *      public void openMachine(File fileToOpen)
+ *
+ * Methods modified:
+ *      protected void handleNewMachine(ActionEvent event)
+ *      protected void handleOpenMachine(ActionEvent event)
+ *      public void updateReopenMachineMenu()
+ *      public void updateReopenMachineFiles()
+ *      private boolean confirmClosing()
+ *      public void clearTables()
+ *      public void loadPreferences()
+ *      public void storePreferences()
+ *      protected void handleSaveMachine(ActionEvent event)
+ *      protected void handleSaveAsMachine(ActionEvent event)
+ *      public void initFileChooser(FileChooser fileChooser, String title, boolean text)
+ *
+ */
+
+/*
+ * Michael Goldenberg, Jinghui Yu, and Ben Borchard modified this file on 11/7/13
+ * with the following changes:
+ * 
+ * 1.) added capability for the register and ram tables to handle the Unsigned Decimal 
+ * and Ascii bases except in the ram address column
+ */ 
+/*  Edited by Stephen Jenkins, Brendan Tschaen and Peter Zhang
  *  modified:
  *  	addBaseChangeListener() -> now allows for unsigned Decimal and ASCII options
  *  Methods added:
  *      protected void handleClearConsole : clears the io console
-*/
+ */
 package cpusim.gui.desktop;
 
 import com.sun.javafx.scene.control.behavior.TextInputControlBehavior;
 import com.sun.javafx.scene.control.skin.TextInputControlSkin;
-
 import cpusim.*;
-import cpusim.Machine.StateWrapper;
 import cpusim.assembler.Token;
 import cpusim.gui.about.AboutController;
 import cpusim.gui.desktop.editorpane.EditorPaneController;
@@ -63,7 +107,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.stage.FileChooser.ExtensionFilter;
-
 import org.xml.sax.SAXParseException;
 
 import java.io.*;
@@ -352,8 +395,6 @@ public class DesktopController implements Initializable {
 
 		textDirtyStrings = new HashMap<Tab, SimpleStringProperty>();
 		textNameStrings = new HashMap<Tab, SimpleStringProperty>();
-		
-		
 	}
 
 	//================ handlers for FILE menu ==================================
@@ -389,7 +430,6 @@ public class DesktopController implements Initializable {
 	@FXML
 	protected void handleOpenText(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		
 		initFileChooser(fileChooser, "Open Text", true);
 
 		File fileToOpen = fileChooser.showOpenDialog(stage);
@@ -496,7 +536,6 @@ public class DesktopController implements Initializable {
 		}
 
 		FileChooser fileChooser = new FileChooser();
-
 		initFileChooser(fileChooser, "Open Machine", false);
 
 
@@ -549,7 +588,6 @@ public class DesktopController implements Initializable {
 	@FXML
 	protected void handleSaveAsHTMLMachine(ActionEvent event) throws FileNotFoundException {
 		FileChooser fileChooser = new FileChooser();
-		
 		initFileChooser(fileChooser, "Save Machine", false);
 		//add additional extension option to view all HTML Machine files
 		//only relevant for this Save dialog
@@ -696,7 +734,7 @@ public class DesktopController implements Initializable {
 				(((TextInputControlSkin<?, ?>) ta.getSkin()).getBehavior());
 		ticb.callAction("DeleteSelection");
 	}
-	
+
 	
 	/**
 	 * Clears the console upon click
@@ -773,9 +811,7 @@ public class DesktopController implements Initializable {
 			String origLine = splitArray[i];
 			if (F <= i && i <= L) {
 				if (commenting) {
-					if (origLine.startsWith(" ")) {
-						editedLine = (commentChar+origLine.substring(1));
-					} else if (origLine.startsWith(commentChar)) {
+					if (origLine.startsWith(commentChar)) {
 						editedLine = origLine;
 					} else {
 						editedLine = (commentChar+origLine);
@@ -1732,7 +1768,6 @@ public class DesktopController implements Initializable {
 		});
 	}
 
-	
 	/**
 	 * adds a change listener to a choice box so that it can keep track of which
 	 * choice is selected and do things cased on that
@@ -1748,27 +1783,25 @@ public class DesktopController implements Initializable {
 					@Override
 					public void changed(ObservableValue ov, Number value, Number new_value) {
 						if (finalType.equals("registerData")) {
-							if (new_value.equals(0)) {
-								regDataBase = "Dec";
+                                                        if (new_value.equals(0)) {
+                                                            regDataBase = "Dec";
 							}
 							else if (new_value.equals(1)) {
-								regDataBase = "Bin";
+                                                            regDataBase = "Bin";
 							}
 							else if (new_value.equals(2)) {
-								regDataBase = "Hex";
+                                                            regDataBase = "Hex";
 							}
 							else if (new_value.equals(3)) {
 								regDataBase = "Uns_Dec";
-							}
+                                                        }
 							else {
 								regDataBase = "ASCII";
-							}
+                                                        }
 							for (RegisterTableController registerTableController
 									: registerControllers) {
 								registerTableController.setDataBase(regDataBase);
 							}
-							//clearTables();
-							//setUpTables();
 						}
 						else if (finalType.equals("ramAddress")) {
 							//Do not want option of unsigned decimal or ASCII
@@ -1778,15 +1811,13 @@ public class DesktopController implements Initializable {
 							else if (new_value.equals(1)) {
 								ramAddressBase = "Bin";
 							}
-							else {
+                                                        else {
 								ramAddressBase = "Hex";
-							}
+                                                        }
 							for (RamTableController ramTableController
 									: ramControllers) {
 								ramTableController.setAddressBase(ramAddressBase);
 							}
-							//clearTables();
-							//setUpTables();
 						}
 						else {  //type == "ramData"
 							if (new_value.equals(0)) {
@@ -1800,16 +1831,14 @@ public class DesktopController implements Initializable {
 							}
 							else if (new_value.equals(3)) {
 								ramDataBase = "Uns_Dec";
-							}
+                                                        }
 							else {
 								ramDataBase = "ASCII";
-							}
+                                                        }
 							for (RamTableController ramTableController
 									: ramControllers) {
 								ramTableController.setDataBase(ramDataBase);
 							}
-							//clearTables();
-							//setUpTables();
 						}
 					}
 				});
@@ -2015,7 +2044,6 @@ public class DesktopController implements Initializable {
 	 */
 	public void initFileChooser(FileChooser fileChooser, String title, boolean text) {
 		fileChooser.setTitle(title);
-		
 		if (text) {
 			fileChooser.setInitialDirectory(new File(currentTextDirectory));
 		}
@@ -2023,18 +2051,6 @@ public class DesktopController implements Initializable {
                         //CHANGE: current machine directory is now stored in the mediator
 			fileChooser.setInitialDirectory(new File(mediator.getCurrentMachineDirectory()));
 		}
-		//add possible file extensions
-		// options are:
-		//				All Files (*.*)
-		//				Machine Files (*.cpu)
-		//				Assembly Files (*.a or *.asm)
-		String[] assemblyFileExtensions= {"*.a","*.asm"}; 
-        fileChooser.getExtensionFilters().addAll(
-        		new FileChooser.ExtensionFilter("All Files", "*.*"),
-        		new FileChooser.ExtensionFilter("Machine Files (*.cpu)", "*.cpu"),
-        		new FileChooser.ExtensionFilter("Assembly Files (*.a or *.asm)",
-        				assemblyFileExtensions )
-        );
 	}
 
 	/**
@@ -2869,7 +2885,8 @@ public class DesktopController implements Initializable {
 
 		prefs.putBoolean("autoSave", otherSettings.autoSave);
 		prefs.putBoolean("showLineNumbers", otherSettings.showLineNumbers.get());
-		
+		prefs.putBoolean("clearConsoleOnRun", otherSettings.clearConsoleOnRun);
+
 		for (String font : rowHeightController.fonts) {
 			for (int size : rowHeightController.sizes) {
 				prefs.putDouble(font+size, 
@@ -2931,7 +2948,8 @@ public class DesktopController implements Initializable {
 
 		otherSettings.autoSave = prefs.getBoolean("autoSave", false);
 		otherSettings.showLineNumbers.set(prefs.getBoolean("showLineNumbers", true));
-		
+		otherSettings.clearConsoleOnRun = prefs.getBoolean("clearConsoleOnRun", true);
+
 		for (String font : rowHeightController.fonts) {
 			for (int size : rowHeightController.sizes) {
 				double val = prefs.getDouble(font+size, -1);
@@ -3279,7 +3297,8 @@ public class DesktopController implements Initializable {
 	public class OtherSettings {
 		public boolean autoSave;
 		public SimpleBooleanProperty showLineNumbers;
-		
+		public boolean clearConsoleOnRun;
+
 		public OtherSettings() {
 			showLineNumbers = new SimpleBooleanProperty(true);
 			showLineNumbers.addListener(new ChangeListener<Boolean>() {

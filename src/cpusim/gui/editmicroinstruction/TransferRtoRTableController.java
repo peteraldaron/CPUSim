@@ -13,6 +13,12 @@
  * which throws a ValidationException in lieu of returning a boolean value
  * 3.) Moved rangesInBound method to the Validate class and changed the return value to void
  * from boolean
+ *
+ * Jinghui Yu, Ben Borchard and Michael Goldenberg modified this file on 11/11/13
+ * with the following changes:
+ *
+ * 1.) Changed checkValidity method so that it calls Validate.registerIsNotReadOnly to check
+ * if any destination register is read-only
  */
 package cpusim.gui.editmicroinstruction;
 
@@ -317,6 +323,10 @@ public class TransferRtoRTableController
 
         for (int i = 0; i < micros.size(); i++) {
             transferRtoRs[i] = (TransferRtoR) micros.get(i);
+
+            Validate.registerIsNotReadOnly(
+                    ((TransferRtoR)micros.get(i)).getDest(),
+                    ((TransferRtoR) micros.get(i)).getName());
         }
 
         // check that all names are unique and nonempty

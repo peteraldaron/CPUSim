@@ -52,8 +52,6 @@
             <MenuItem mnemonicParsing="false" onAction="#handleDelete" text="Delete"/>
             <MenuItem mnemonicParsing="false" onAction="#handleSelectAll" text="Select All"/>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#handleClearConsole" text="Clear Console"/>
-            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#handleToggleComment" text="Toggle Comment"/>
             <MenuItem mnemonicParsing="false" onAction="#handleFind" text="Find..."/>
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -107,8 +105,8 @@
                           <String fx:value="Dec" />
                           <String fx:value="Bin" />
                           <String fx:value="Hex" />
-                          <String fx:value="Uns_Dec" />
-                          <String fx:value="ASCII" />
+                          <String fx:value="Unsigned Dec" />
+                          <String fx:value="Ascii" />
                         </FXCollections>
                       </items>
                     </ChoiceBox>
@@ -140,8 +138,8 @@
                           <String fx:value="Dec" />
                           <String fx:value="Bin" />
                           <String fx:value="Hex" />
-                          <String fx:value="Uns_Dec" />
-                          <String fx:value="ASCII" />
+                          <String fx:value="Unsigned Dec" />
+                          <String fx:value="Ascii" />
                         </FXCollections>
                       </items>
                     </ChoiceBox>

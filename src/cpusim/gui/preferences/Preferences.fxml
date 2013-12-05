@@ -205,6 +205,8 @@
                 <CheckBox fx:id="autoSave" mnemonicParsing="false" text="Automatically save programs before assembly." VBox.margin="$x1" />
                 <Label minHeight="13.999908447265625" prefHeight="13.999908447265625" text="Text Display Settings" />
                 <CheckBox fx:id="showLineNumbers" mnemonicParsing="false" text="Show line numbers." VBox.margin="$x1" />
+                <Label minHeight="13.999908447265625" prefHeight="13.999908447265625" text="Console Settings" />
+                <CheckBox fx:id="clearConsoleOnRun" mnemonicParsing="false" text="Clear the console on run." VBox.margin="$x1" />
               </children>
               <padding>
                 <Insets left="10.0" top="10.0" />

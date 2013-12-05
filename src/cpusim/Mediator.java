@@ -8,6 +8,20 @@
 
 /**
  * File: Mediator
+ * Authors: Joseph Harwood and Jake Epstein
+ * Date: 10/14/13
+ *
+ * Added method clearConsole which does exactly that.
+ *
+ * Updated method ResetEverything to also clear the console
+ * to prevent violation of the principle of least astonishment.
+ *
+ * Updated method Run to allow for toggling of clearConsoleOnRun
+ *
+ */
+
+/**
+ * File: Mediator
  * Author: Pratap Luitel, Scott Franchi, Stephen Webel
  * Date: 10/27/13
  * 
@@ -47,13 +61,11 @@
  *      private void stop()
  */
 package cpusim;
-import cpusim.Machine.StateWrapper;
 import cpusim.assembler.AssembledInstructionCall;
 import cpusim.assembler.Assembler;
 import cpusim.assembler.AssemblyException;
 import cpusim.gui.desktop.DesktopController;
 import cpusim.gui.desktop.editorpane.EditorPaneController;
-import cpusim.microinstruction.IO;
 import cpusim.mif.MIFScanner;
 import cpusim.module.RAM;
 import cpusim.module.RAMLocation;
@@ -62,29 +74,24 @@ import cpusim.module.RegisterArray;
 import cpusim.util.*;
 import cpusim.xml.MachineReader;
 import cpusim.xml.MachineWriter;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Dialogs;
 import javafx.stage.Stage;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.stage.FileChooser;
-
 import org.xml.sax.SAXParseException;
 
 /**
@@ -348,7 +355,6 @@ public class Mediator {
     */
     public void saveAsMachine() {
         FileChooser fileChooser = new FileChooser();
-        
         this.desktopController.initFileChooser(fileChooser, "Save Machine", false);
 
         File fileToSave = fileChooser.showSaveDialog(stage);
@@ -558,7 +564,14 @@ public class Mediator {
     public void Run() {
         // Try running
         machine.get().getControlUnit().reset();
-        machine.get().resetAllChannels();
+
+        if (desktopController.getOtherSettings().clearConsoleOnRun) {
+            machine.get().resetAllChannels();
+        }
+        else {
+        	machine.get().resetAllChannelsButConsole();
+        }
+
         machine.get().execute(Machine.RunModes.RUN);
     }
 
@@ -572,12 +585,21 @@ public class Mediator {
     }
 
     /**
-     * Clears all registers and Arrays.
+     * Clears all registers and Arrays and Console.
      * Called from the Execute menu.
      */
     public void ResetEverything() {
         clearHelper();
         clear();
+        ClearConsole();
+    }
+
+    /**
+     * Clears the console.
+     * Called from the Execute menu.
+     */
+    public void ClearConsole() {
+    	machine.get().resetAllChannels();
     }
 
     

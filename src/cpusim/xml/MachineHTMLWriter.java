@@ -11,6 +11,16 @@
 // Things to do:
 //  1.
 
+/*
+ * Michael Goldenberg, Ben Borchard, and Jinghui Yu made the following changes in 11/11/13
+ * 
+ * 1.) Modified various aspects of the modules display so that the the initial value 
+ * and read only properties of the register will be displayed in the table.  Also so
+ * that the all the registers within each register array will be displayed within the register
+ * array table
+ * 
+ */
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // the package in which our project resides
@@ -53,14 +63,16 @@ public class MachineHTMLWriter
     public MachineHTMLWriter()
     {
         moduleHeaders = new String[]{
-            HEADER_PREFIX + "2" + HEADER_MIDDLE + "Registers" + HEADER_SUFFIX,
-            HEADER_PREFIX + "3" + HEADER_MIDDLE + "Register Arrays" + HEADER_SUFFIX,
+            HEADER_PREFIX + "4" + HEADER_MIDDLE + "Registers" + HEADER_SUFFIX,
+            HEADER_PREFIX + "4" + HEADER_MIDDLE + "Register Arrays" + HEADER_SUFFIX,
             HEADER_PREFIX + "4" + HEADER_MIDDLE + "Condition Bits" + HEADER_SUFFIX,
             HEADER_PREFIX + "3" + HEADER_MIDDLE + "RAMs" + HEADER_SUFFIX
         };
         moduleColumnHeaders = new String[]{
-            COL_HEADER_PREFIX + "Width</B></TD></TR>",
-            COL_HEADER_PREFIX + "Length</B></TD><TD>" + "<B>Width</B></TD></TR>",
+            COL_HEADER_PREFIX + "Width</B></TD><TD>" + "<B>Initial Value</B></TD><TD>"
+                + "<B>Read Only</B></TD></TR>",
+            COL_HEADER_PREFIX + "Length</B></TD><TD>" + "<B>Width</B></TD><TD>" + 
+                "<B>Registers</B></TD></TR>",
             COL_HEADER_PREFIX + "Register</B></TD><TD><B>Bit</B></TD>" +
                                  "<TD><B>Halt</B></TD></TR>",
             COL_HEADER_PREFIX + "Length</B></TD><TD><B>Bits per Cell</B></TD></TR>"

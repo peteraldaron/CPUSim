@@ -49,6 +49,7 @@ public class PreferencesController implements Initializable {
 
 	@FXML CheckBox autoSave;
 	@FXML CheckBox showLineNumbers;
+	@FXML CheckBox clearConsoleOnRun;
 
 	@FXML Button applyButton;
 	@FXML Button okayButton;
@@ -230,6 +231,7 @@ public class PreferencesController implements Initializable {
 	private void saveOtherTab() {
 		desktopController.getOtherSettings().autoSave = this.autoSave.isSelected();
 		desktopController.getOtherSettings().showLineNumbers.set(this.showLineNumbers.isSelected());
+		desktopController.getOtherSettings().clearConsoleOnRun = this.clearConsoleOnRun.isSelected();
 	}
 
 
@@ -338,6 +340,7 @@ public class PreferencesController implements Initializable {
 
 		autoSave.selectedProperty().set(desktopController.getOtherSettings().autoSave);
 		showLineNumbers.selectedProperty().set(desktopController.getOtherSettings().showLineNumbers.get());
+		clearConsoleOnRun.selectedProperty().set(desktopController.getOtherSettings().clearConsoleOnRun);
 	}
 
 	/**
@@ -581,6 +584,8 @@ public class PreferencesController implements Initializable {
 					return;
 
 				}
+
+
 
 				keyBindings.set(keyBindingsPane.getChildren().indexOf(currLabel), kbString);
 				updateKeyBindingDisplay();

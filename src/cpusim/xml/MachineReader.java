@@ -24,6 +24,12 @@
  * in a list of the mahcine instructions instead of an array thereof
  * 2.) Changed the call to the Validate.punctIsValid method so that we are passing
  * in a list of the Punctuation Charaters instead of an array thereof
+ *
+ * Michael Goldenberg, Jinghui Yu, and Ben Borchard made the following modifications to
+ * this class on 11/11/13:
+ *
+ * 1.) Changed startRegister method so that the parser reads in initial value and read-only
+ * properties of registers and registers in a register array.
  */
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -363,7 +369,15 @@ public class MachineReader
     public void startRegister(Attributes attrs) {
         String name = attrs.getValue("name");
         String widthString = attrs.getValue("width");
+        String initialValueString =
+                attrs.getValue("initialValue") == null? "0" :attrs.getValue("initialValue");
+        String readOnlyString =
+                attrs.getValue("readOnly") == null? "false" :attrs.getValue("readOnly");
+        boolean readOnly = readOnlyString.equals("true");
+
         int width;
+        int initialValue;
+
         try {
             width = Integer.parseInt(widthString);
         } catch (NumberFormatException e) {
@@ -376,6 +390,15 @@ public class MachineReader
                     getCurrentLine() + "The width of register \""
                             + name + "\" must be between 1 and 64, not " + width);
         }
+
+        try {
+            initialValue = Integer.parseInt(initialValueString);
+        } catch (NumberFormatException e) {
+            throw new MachineReaderException(getCurrentLine() +
+                   "The initial value of register\""
+                    + name + "\" must be an integer, not \"" + initialValueString + "\".");
+        }
+
         String id = attrs.getValue("id");
         Register r;
 
@@ -386,9 +409,12 @@ public class MachineReader
                                 "of register array " + currentRegisterArray.getName() +
                                 " does not match the list of registers for it");
             r = currentRegisterArray.registers().get(currentRegisterArrayIndex);
+            r.setName(name);
+            r.setInitialValue(initialValue);
+            r.setReadOnly(readOnly);
             currentRegisterArrayIndex++;
         } else {
-            r = new Register(name, width);
+            r = new Register(name, width, initialValue, readOnly);
             ((ObservableList<Register>) machine.getModule("registers")).add(r);
         }
         components.put(id, r);
