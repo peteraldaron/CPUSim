@@ -12,7 +12,9 @@
 
 /*
  * Michael Goldenberg, Jinghui Yu, and Ben Borchard made the following modifications to 
- * this class on 10/27/13:
+ * this class 
+ * 
+ * on 10/27/13:
  * 
  * 1.) Removed the getFieldsFromFormat() method because we no longer use the format string
  * 2.) Created the nameableObjects() method that takes in an array of objects and checks
@@ -51,6 +53,15 @@
  * to a list thereof
  * 9.) Added the containsDecodeMicro() method to be used in to validate the microinstructions in the 
  * fetch sequence
+ * 
+ * on 11/11/13:
+ * 
+ * 1.) added the method opcodeFieldIsFirst() that checks if the first assembly field of 
+ * a machine instruction is the same field as the first instruction field.  Made use
+ * of this methods in the machineInstructions() method
+ * 2.) added the method readOnlyRegistersAreImmutable() to check that the TransferAtoR
+ * and TransferRtoR aren't writing to read-only registers
+ * 3.) added a method registerIsNotReadOnly() to check if a register is read only
  * 
  */
 
@@ -98,6 +109,7 @@ public class Validate
      * 3. the first field is proper
      * 4. unique, positive opcode that fits in the first field
      * 5. Total length of all fields is a positive integer at most 64.
+     * 6. The first instruction field and the first assembly field are the same field
     
      * It throws a ValidationException if one or more
      * of the properties are not satisfied
@@ -109,12 +121,13 @@ public class Validate
     {
         for (MachineInstruction instr : instrs) {
             nameIsValidAssembly(instr.getName(), machine);
-            opcodeIsNonnegative(instr);
+            opcodeIsNonnegative(instr.getOpcode());
             fieldsListIsNotEmpty(instr);
             firstFieldIsProper(instr);
             //atMostOnePosLengthFieldIsOptional(instr); //not in this version
             opcodeFits(instr);
             fieldLengthsAreAtMost64(instr);
+            opcodeFieldIsFirst(instr);
         }
 
         allOpcodesAreUnique(instrs);
@@ -289,6 +302,19 @@ public class Validate
                     instr.getName() + "\" has no fields.");
         }
     }
+    
+    /**
+     * checks that the first field in the assemblyFields list is the same as the first
+     * field in the instructionFields list (the opcode field)
+     * @param instr instruction whose first assembly field needs to be checked
+     */
+    public static void opcodeFieldIsFirst(MachineInstruction instr){
+        if (!instr.getAssemblyColors().get(0).equals(instr.getInstructionColors().get(0))){
+            throw new ValidationException("Your opcode (the first field in the instruction fields)"
+                    + "must be the first field in your assembly fields.  This is not the"
+                    + "case for instruction "+instr.getName()+".");
+        }
+    }
 
     /**
      * checks if the first (opcode) field of the instruction has the
@@ -317,11 +343,11 @@ public class Validate
      * checks if the opcode is non-negative
      * @param instr instruction whose opcode needs to be validated
      */
-    private static void opcodeIsNonnegative(MachineInstruction instr)
+    private static void opcodeIsNonnegative(long opcode)
     {
-        if (instr.getOpcode() < 0) {
-            throw new ValidationException("The opcode " + instr.getOpcode() +
-                        " of instruction \"" + instr.getName() +
+        if (opcode < 0) {
+            throw new ValidationException("The opcode " + opcode +
+                        " of instruction \"" + opcode +
                         "\" is negative.\n" +
                         "All machine instructions must have nonnegative " +
                         "opcodes.");
@@ -329,17 +355,17 @@ public class Validate
     }
 
     /**
-     * checks if the opcode fits in the first field
-     * @param instr instruction whose opcode needs to be validated
+     * determines if the opcode fits given the number of bits
+     * @param opcode opcode of the machine instruction
+     * @param numBits number of bits in the machine instruction
+     * @param instrName name of the machine instruction (needed for the error message)
      */
     public static void opcodeFits(MachineInstruction instr)
     {
-        int firstFieldLength = instr.getInstructionFields().get(0).getNumBits();
-        long opcode = instr.getOpcode();
-        if (opcode >= (long) Math.pow(2, firstFieldLength)) {
+        if (instr.getOpcode() >= (long) Math.pow(2, instr.getNumBits())) {
             throw new ValidationException("The opcode \"" +
-                        Convert.fromLongToHexadecimalString(opcode,
-                                                            firstFieldLength) +
+                        Convert.fromLongToHexadecimalString(instr.getOpcode(),
+                                                            instr.getNumBits()) +
                         "\" (hex) of instruction \"" + instr.getName() +
                         "\" is too big for the\nfirst field of the instruction.");
         }
@@ -897,8 +923,7 @@ public class Validate
     public static void instructionsOpcodeIsValid(List<MachineInstruction>
             machineInstructions, MachineInstruction machineInstruction){
         
-        opcodeIsNonnegative(machineInstruction);
-        opcodeFits(machineInstruction);
+        opcodeIsNonnegative(machineInstruction.getOpcode());
         
         for (MachineInstruction instr : machineInstructions){
             if (!instr.equals(machineInstruction)){
@@ -1339,6 +1364,59 @@ public class Validate
         if (!containsDecode){
             throw new ValidationException("The fetch sequence must contain a decode "
                     + "microinstruction.");
+        }
+    }
+
+    /**
+     * checks if the dest register of the given microinstruction is read-only
+     * @param register destination register of transferRtoR or transferAtoR
+     * @param microName name of the given microinstruction
+     */
+    public static void registerIsNotReadOnly(Register register, String microName){
+        if (register.getReadOnly() == true)
+            throw new ValidationException("The destination register " +
+                    register.getName() + " of the microinstruction " +
+                    microName + " is read-only.");
+    }
+
+    /**
+     * When saving the modified registers to machine, check if those read-only
+     * regsters are used in any of the transferAtoA or transferRtoR microinstructions.
+     * @param registers an array of registers
+     * @param transferAtoRs an list of transferAtoR microinstructions
+     * @param transferRtoRs an list of transferRtoR microinstructions
+     */
+    public static void readOnlyRegistersAreImmutable(Register[] registers,
+                                                     ObservableList transferAtoRs,
+                                                     ObservableList transferRtoRs){
+        List readOnlyRegisters = new ArrayList<String>();
+        for (int i = 0; i < registers.length; i++){
+            if (registers[i].getReadOnly()==true)
+                readOnlyRegisters.add(registers[i].getName());
+        }
+
+        if (readOnlyRegisters.size() == 0)
+            return;
+        else {
+            for (Object o: transferAtoRs){
+                if (readOnlyRegisters.contains(((TransferAtoR)o).getDest().getName()))
+                    throw new ValidationException("The register " +
+                            ((TransferAtoR)o).getDest().getName() +
+                            " is used as the destination reigster in the " +
+                            "microinstruction transferAtoR " + ((TransferAtoR)o).getName() +
+                            ". You should change the microinstruction before " +
+                            "setting the register to read-only.");
+            }
+
+            for (Object o: transferRtoRs){
+                if (readOnlyRegisters.contains(((TransferRtoR)o).getDest().getName()))
+                throw new ValidationException("The register " +
+                        ((TransferRtoR)o).getDest().getName() +
+                        " is used as the destination reigster in the " +
+                        "microinstruction transferRtoR " + ((TransferRtoR)o).getName() +
+                        ". You should change the microinstruction before " +
+                        "setting the register to read-only.");
+            }
         }
     }
 } //end of class Validate
