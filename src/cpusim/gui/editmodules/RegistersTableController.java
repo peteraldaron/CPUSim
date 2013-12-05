@@ -8,6 +8,15 @@
  * which throws a ValidationException in lieu of returning a boolean value
  * 3.) Moved rangesAreInBounds method to the Validate class and changed the return value to void
  * from boolean
+ *
+ * Jinghui Yu, Ben Borchard and Michael Goldenberg made the following modifications to
+ * this class on 11/11/13:
+ *
+ * 1.) Added a column readOnly to decide if the value in that register is immutable
+ * 2.) Changed initialize method so that it initializes cell factory of readOnly property
+ * 3.) Changed checkValidity method so that it calls the Validate.readOnlyRegistersAreImmutable
+ * to check if any read-only register is used as the destination register in microinstructions
+ * transferAtoR and transferRtoR.
  */
 package cpusim.gui.editmodules;
 
@@ -27,6 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
@@ -49,6 +59,7 @@ public class RegistersTableController
     TableColumn<Register,String> name;
     @FXML TableColumn<Register,Integer> width;
     @FXML TableColumn<Register,Long> initialValue;
+    @FXML TableColumn<Register,Boolean> readOnly;
 
     private ObservableList currentModules;
     private Register prototype;
@@ -61,7 +72,7 @@ public class RegistersTableController
     public RegistersTableController(Mediator mediator){
         super(mediator);
         this.currentModules = machine.getModule("registers");
-        this.prototype = new Register("???", 16, 0);
+        this.prototype = new Register("???", 16, 0, false);
         clones = (Module[]) createClones();
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -93,9 +104,10 @@ public class RegistersTableController
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        name.prefWidthProperty().bind(table.prefWidthProperty().divide(100/40.0));
+        name.prefWidthProperty().bind(table.prefWidthProperty().divide(100/30.0));
         width.prefWidthProperty().bind(table.prefWidthProperty().divide(100/20.0));
-        initialValue.prefWidthProperty().bind(table.prefWidthProperty().divide(100/40.0));
+        initialValue.prefWidthProperty().bind(table.prefWidthProperty().divide(100/30.0));
+        readOnly.prefWidthProperty().bind(table.prefWidthProperty().divide(100/20.0));
 
         Callback<TableColumn<Register,String>,TableCell<Register,String>> cellStrFactory =
                 new Callback<TableColumn<Register, String>, TableCell<Register, String>>() {
@@ -121,11 +133,20 @@ public class RegistersTableController
                         return new EditingLongCell<Register>();
                     }
                 };
+        Callback<TableColumn<Register,Boolean>,TableCell<Register,Boolean>> cellBooleanFactory =
+                new Callback<TableColumn<Register, Boolean>, TableCell<Register, Boolean>>() {
+                    @Override
+                    public TableCell<Register, Boolean> call(
+                            TableColumn<Register, Boolean> registerBooleanTableColumn) {
+                        return new CheckBoxTableCell<Register,Boolean>();
+                    }
+                };
 
 
         name.setCellValueFactory(new PropertyValueFactory<Register, String>("name"));
         width.setCellValueFactory(new PropertyValueFactory<Register, Integer>("width"));
         initialValue.setCellValueFactory(new PropertyValueFactory<Register, Long>("initialValue"));
+        readOnly.setCellValueFactory(new PropertyValueFactory<Register, Boolean>("readOnly"));
 
         //Add for Editable Cell of each field, in String or in Integer
         name.setCellFactory(cellStrFactory);
@@ -167,6 +188,19 @@ public class RegistersTableController
                     }
                 }
         );
+
+        readOnly.setCellFactory(cellBooleanFactory);
+        readOnly.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<Register, Boolean>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<Register, Boolean> text) {
+                        ((Register)text.getRowValue()).setReadOnly(
+                                text.getNewValue());
+                    }
+                }
+        );
+
+
     }
 
     /**
@@ -297,6 +331,9 @@ public class RegistersTableController
 
         Validate.registerWidthsAreOkay(bitController,registers);
         Validate.registerWidthsAreOkayForMicros(machine,table);
+        Validate.readOnlyRegistersAreImmutable(registers,
+                machine.getMicros("transferAtoR"),
+                machine.getMicros("transferRtoR"));
 
     }
 

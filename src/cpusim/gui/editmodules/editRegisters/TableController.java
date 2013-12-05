@@ -1,3 +1,17 @@
+/**
+ * Created with IntelliJ IDEA.
+ * User: jyu
+ * Date: 8/12/13
+ * Time: 9:54 AM
+ * To change this template use File | Settings | File Templates.
+ *
+ * Jinghui Yu, Ben Borchard and Michael Goldenberg made the following modifications to
+ * this class on 11/11/13:
+ *
+ * 1.) Added a column readOnly to decide if the value in that register is immutable
+ * 2.) Changed initialize method so that it initializes cell factory of readOnly property
+ */
+
 package cpusim.gui.editmodules.editRegisters;
 
 import cpusim.Module;
@@ -18,6 +32,7 @@ import javafx.scene.control.Dialogs;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -28,13 +43,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jyu
- * Date: 8/12/13
- * Time: 9:54 AM
- * To change this template use File | Settings | File Templates.
- */
+
 public class TableController extends TableView implements Initializable {
     @FXML
     TableView<Register> table;
@@ -42,6 +51,7 @@ public class TableController extends TableView implements Initializable {
     TableColumn<Register,String> name;
     @FXML TableColumn<Register,Integer> width;
     @FXML TableColumn<Register,Long> initialValue;
+    @FXML TableColumn<Register,Boolean> readOnly;
 
     HashMap assocList;  //associates the current modules
     //with the edited clones; key = new clone, value = original
@@ -92,9 +102,10 @@ public class TableController extends TableView implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        name.prefWidthProperty().bind(table.prefWidthProperty().divide(100/40.0));
+        name.prefWidthProperty().bind(table.prefWidthProperty().divide(100/30.0));
         width.prefWidthProperty().bind(table.prefWidthProperty().divide(100/20.0));
-        initialValue.prefWidthProperty().bind(table.prefWidthProperty().divide(100/40.0));
+        initialValue.prefWidthProperty().bind(table.prefWidthProperty().divide(100/30.0));
+        readOnly.prefWidthProperty().bind(table.prefWidthProperty().divide(100/20.0));
 
         Callback<TableColumn<Register,String>,TableCell<Register,String>> cellStrFactory =
                 new Callback<TableColumn<Register, String>, TableCell<Register, String>>() {
@@ -120,11 +131,19 @@ public class TableController extends TableView implements Initializable {
                         return new EditingLongCell<Register>();
                     }
                 };
-
+        Callback<TableColumn<Register,Boolean>,TableCell<Register,Boolean>> cellBooleanFactory =
+                new Callback<TableColumn<Register, Boolean>, TableCell<Register, Boolean>>() {
+                    @Override
+                    public TableCell<Register, Boolean> call(
+                            TableColumn<Register, Boolean> registerBooleanTableColumn) {
+                        return new CheckBoxTableCell<Register,Boolean>();
+                    }
+                };
 
         name.setCellValueFactory(new PropertyValueFactory<Register, String>("name"));
         width.setCellValueFactory(new PropertyValueFactory<Register, Integer>("width"));
         initialValue.setCellValueFactory(new PropertyValueFactory<Register, Long>("initialValue"));
+        readOnly.setCellValueFactory(new PropertyValueFactory<Register, Boolean>("readOnly"));
 
         //Add for Editable Cell of each field, in String or in Integer
         name.setCellFactory(cellStrFactory);
@@ -161,6 +180,16 @@ public class TableController extends TableView implements Initializable {
                     @Override
                     public void handle(TableColumn.CellEditEvent<Register, Long> text) {
                         ((Register)text.getRowValue()).setInitialValue(
+                                text.getNewValue());
+                    }
+                }
+        );
+        readOnly.setCellFactory(cellBooleanFactory);
+        readOnly.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<Register, Boolean>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<Register, Boolean> text) {
+                        ((Register)text.getRowValue()).setReadOnly(
                                 text.getNewValue());
                     }
                 }

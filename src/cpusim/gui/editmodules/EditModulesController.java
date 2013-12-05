@@ -381,7 +381,7 @@ public class EditModulesController implements Initializable {
             mediator.addPropertyChangeListenerToAllModules(mediator.getBackupManager());
             desktop.getHighlightManager().updatePairsForNewRegistersAndRAMs();
         }
-        catch (Exception ex) {
+        catch (ValidationException ex) {
             Dialogs.showErrorDialog(
                     (Stage)okButton.getScene().getWindow(),
                     ex.getMessage(), "Error", "Edit Modules");

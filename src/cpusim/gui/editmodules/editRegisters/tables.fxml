@@ -11,6 +11,7 @@
   <columns>
     <TableColumn text="name" fx:id="name" />
     <TableColumn text="width" fx:id="width" editable="false"/>
-    <TableColumn text="initialValue" fx:id="initialValue" />
+    <TableColumn text="initial value" fx:id="initialValue" />
+    <TableColumn text="read-only" fx:id="readOnly" />
   </columns>
 </fx:root>
