@@ -400,18 +400,14 @@ public class EditMachineInstructionController implements Initializable {
                     Microinstruction micro = null;
                     for (String string : Machine.MICRO_CLASSES){
                         for (Microinstruction instr : mediator.getMachine().getMicros(string)){
-                            //special case if instruction is a comment
-                            if (instr instanceof cpusim.microinstruction.Comment){
-                                if(!microName.equals("Comment")){
+                            if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
+                                //special case if instruction is a comment
+                                if(className.equals("comment") && !microName.equals("Comment")){
                                     micro = new cpusim.microinstruction.Comment();
                                     micro.setName(microName);
                                 }
-                                else{
-                                    micro=new cpusim.microinstruction.Comment();
-                                }
-                            }
-                            else if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
-                                micro = instr;
+                                else 
+                                    micro = instr;
                             }
                         }
                     }
@@ -1069,7 +1065,7 @@ public class EditMachineInstructionController implements Initializable {
                             mouseEvent.getClickCount() == 2){
 
                         //add option to edit comment if instr is comment:
-                        if(micro instanceof cpusim.microinstruction.Comment){
+                        if(micro instanceof cpusim.microinstruction.Comment){ 
                             String input="";
                             Stage stage=((Stage)implementationFormatPane.getScene().getWindow());
                             input = Dialogs.showInputDialog(stage,
