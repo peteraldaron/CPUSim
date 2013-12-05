@@ -1027,6 +1027,12 @@ public class EditMachineInstructionController implements Initializable {
         for (final Microinstruction micro : currentInstr.getMicros()){
             final Label microLabel;
             microLabel = new Label(micro.getName());
+            if(micro.getMicroClass().equals("comment")){
+                //set style of label:
+                microLabel.setStyle("-fx-text-fill:red;-fx-font:bold italic "
+                        + "12px \"Monospace\";");
+
+            }
             microLabel.setPrefWidth(implementationFormatPane.getPrefWidth());
             microLabel.setPrefHeight(20);
             microLabel.setLayoutY(i);
