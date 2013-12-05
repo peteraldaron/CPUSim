@@ -400,14 +400,13 @@ public class EditMachineInstructionController implements Initializable {
                     Microinstruction micro = null;
                     for (String string : Machine.MICRO_CLASSES){
                         for (Microinstruction instr : mediator.getMachine().getMicros(string)){
+                            if(className.equals("comment") && !microName.equals("Comment")){
+                                micro = new cpusim.microinstruction.Comment();
+                                micro.setName(microName);
+                            }
                             if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
                                 //special case if instruction is a comment
-                                if(className.equals("comment") && !microName.equals("Comment")){
-                                    micro = new cpusim.microinstruction.Comment();
-                                    micro.setName(microName);
-                                }
-                                else 
-                                    micro = instr;
+                                micro = instr;
                             }
                         }
                     }
