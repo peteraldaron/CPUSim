@@ -95,6 +95,17 @@ public class EditFetchSequenceController implements Initializable {
                 Microinstruction micro = null;
                 for (String string : Machine.MICRO_CLASSES){
                     for (Microinstruction instr : mediator.getMachine().getMicros(string)){
+                            //special case if instruction is a comment
+                        if (instr instanceof cpusim.microinstruction.Comment){
+                            if(!microName.equals("Comment")){
+                                micro = new cpusim.microinstruction.Comment();
+                                micro.setName(microName);
+                            }
+                            else{
+                                micro=new cpusim.microinstruction.Comment();
+                            }
+                        }
+                        
                         if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
                             micro = instr;
                         }
@@ -182,6 +193,21 @@ public class EditFetchSequenceController implements Initializable {
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)
                             && mouseEvent.getClickCount() == 2 ){
+
+
+                        //add option to edit comment if instr is comment:
+                        if(micro instanceof cpusim.microinstruction.Comment){
+                            String input="";
+                            Stage stage=((Stage)implementationFormatPane.getScene().getWindow());
+                            input = Dialogs.showInputDialog(stage,
+                                        "Enter label for comment:", 
+                                        "Comment", 
+                                        "Kommentti");
+                            if(!(input==null) && !input.equals(""))
+                                micro.setName(input);
+                            updateMicros();
+                        } 
+
                         ObservableList<TreeItem> list = microInstrTreeView.getRoot().getChildren();
 
                         for (TreeItem<String> t : list){

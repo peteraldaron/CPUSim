@@ -4,7 +4,7 @@
  * Last Modified 6/4/13s
  */
 
-/*
+/**
  * Michael Goldenberg, Jinghui Yu, and Ben Borchard modified this file on 10/27/13
  * with the following changes:
  * 
@@ -14,6 +14,12 @@
  * 3.) added the ability to dynamically check the validity of the opcodes as the user inputs
  * them by calling two methods in the Validate class after there is a change event on the
  * opcode textField
+ * 
+ * Modified by: Peter Zhang, Stephen Jenkins , Brendan Tschaen
+ * Modified on: Dec 4 2013
+ * Methods modified: updateMicros
+ * now the updateMicros asks the user to enter a label for the comment micro
+ * once the user double clicks on the comment label
  */
 package cpusim.gui.editmachineinstruction;
 
@@ -267,6 +273,8 @@ public class EditMachineInstructionController implements Initializable {
                 /* data dropped */
                 /* if there is a string data on drag board, read it and use it */
                 if (currentInstr != null && !originPane.equals(assemblyFormatPane) && draggingField.getNumBits() != 0){
+                    
+                    
                     double localX = instructionFormatPane.sceneToLocal(event.getSceneX(), event.getSceneY()).getX();
                     int index = getInstrFieldIndex(localX);
                     currentInstr.getInstructionFields().add(index, draggingField);
@@ -392,7 +400,17 @@ public class EditMachineInstructionController implements Initializable {
                     Microinstruction micro = null;
                     for (String string : Machine.MICRO_CLASSES){
                         for (Microinstruction instr : mediator.getMachine().getMicros(string)){
-                            if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
+                            //special case if instruction is a comment
+                            if (instr instanceof cpusim.microinstruction.Comment){
+                                if(!microName.equals("Comment")){
+                                    micro = new cpusim.microinstruction.Comment();
+                                    micro.setName(microName);
+                                }
+                                else{
+                                    micro=new cpusim.microinstruction.Comment();
+                                }
+                            }
+                            else if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
                                 micro = instr;
                             }
                         }
@@ -958,6 +976,7 @@ public class EditMachineInstructionController implements Initializable {
     /**
      * updates the display of the fields on the left based on all the fields in the 
      * machine
+     * 
      */
     private void updateFieldNames() {
         fieldPane.getChildren().clear();
@@ -1011,7 +1030,8 @@ public class EditMachineInstructionController implements Initializable {
         implementationFormatPane.getChildren().clear();
         int i = 0;
         for (final Microinstruction micro : currentInstr.getMicros()){
-            final Label microLabel = new Label(micro.getName());
+            final Label microLabel;
+            microLabel = new Label(micro.getName());
             microLabel.setPrefWidth(implementationFormatPane.getPrefWidth());
             microLabel.setPrefHeight(20);
             microLabel.setLayoutY(i);
@@ -1056,8 +1076,9 @@ public class EditMachineInstructionController implements Initializable {
                                         "Enter label for comment:", 
                                         "Comment", 
                                         "Kommentti");
-                            if(!(input==null) && !input.equals(""))
+                            if(!(input==null) && !input.equals("")){
                                 micro.setName(input);
+                            }
                             updateMicros();
                         } 
                     
