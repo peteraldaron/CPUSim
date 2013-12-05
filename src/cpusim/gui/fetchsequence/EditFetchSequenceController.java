@@ -106,7 +106,7 @@ public class EditFetchSequenceController implements Initializable {
                             }
                         }
                         
-                        if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
+                        else if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
                             micro = instr;
                         }
                     }
