@@ -70,6 +70,7 @@ public class BufferedChannel implements IOChannel {
     
     /**
      * read long values from the channel.
+     * It goes through the inputbuffer.
      * 
      * @param numBits - the number of bits the long should be 
      * able to fit into.
