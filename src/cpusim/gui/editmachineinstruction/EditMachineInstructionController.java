@@ -62,6 +62,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 
 /**
  * FXML Controller class
@@ -112,7 +113,7 @@ public class EditMachineInstructionController implements Initializable {
     
     ObservableList<String> instrNames;
     ObservableList<String> fieldNames;
-    
+
     public EditMachineInstructionController(Mediator mediator) {
         this.mediator = mediator;
         currentInstr = null;
@@ -1033,48 +1034,34 @@ public class EditMachineInstructionController implements Initializable {
                 }
             });
 
+            microLabel.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                @Override
+                public void handle(MouseEvent mouseEvent){
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
+                            mouseEvent.getClickCount() == 2){
+                    }
+                }
+            });
             microLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
                             mouseEvent.getClickCount() == 2){
-                        ObservableList<TreeItem> list = microInstrTreeView.getRoot().getChildren();
-                        System.out.println("Das ist kliken");
-                        
-                        //add option to edit comment if instr is comment:
-                        if(microLabel.textProperty().getValue().equals("Comment")){
-                        	System.out.println("da");
-                        	
-                        	DialogChannel dc=new DialogChannel("CommentDialog");
-                        	dc.setStage((Stage)implementationFormatPane.getScene().getWindow());
-                        	dc.readString();
 
-                        	/*
-                        	final Stage stage=(Stage)implementationFormatPane.getScene().getWindow();
-                        	try {
-                                FXUtilities.runAndWait(new Runnable() {
-                                    public void run() {
-                                    	System.out.println("running");
-                                        Dialogs.showInformationDialog(stage,
-                                            "Changing Comment",
-                                            "Comment", 
-                                            "Comment");
-                                        
-                                    }
-                                });
-	                        } catch (Exception e) {
-	                            throw new ExecutionException("An Exception was thrown" +
-	                                    " when we attempted to read from the console.");
-	                        }
-                        	while(true){
-                        		try{
-                    			System.out.println("thread still going:"+Thread.currentThread());
-                    			Thread.sleep(500);
-                        		}
-                        		catch(Exception e){}
-                    		}
-                    		*/
-                        }
+                        //add option to edit comment if instr is comment:
+                        if(micro instanceof cpusim.microinstruction.Comment){
+                            String input="";
+                            Stage stage=((Stage)implementationFormatPane.getScene().getWindow());
+                            input = Dialogs.showInputDialog(stage,
+                                        "Enter label for comment:", 
+                                        "Comment", 
+                                        "Kommentti");
+                            if(!(input==null) && !input.equals(""))
+                                micro.setName(input);
+                            updateMicros();
+                        } 
+                    
+                        ObservableList<TreeItem> list = microInstrTreeView.getRoot().getChildren();
 
                         for (TreeItem<String> t : list){
                             if (t.getValue().equals(micro.getMicroClass())){
