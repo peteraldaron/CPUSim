@@ -250,6 +250,7 @@ public class FileChannel implements IOChannel  {
             if( !unreadStack.isEmpty() ) {
             	String s = " " + unreadStack.pop();
             	reader.unread(s.toCharArray());
+            	System.out.println(s);
             }
         	
     	} catch (FileNotFoundException fne) {
