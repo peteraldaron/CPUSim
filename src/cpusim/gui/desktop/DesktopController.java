@@ -1511,7 +1511,6 @@ public class DesktopController implements Initializable {
 	private void setInDebugMode(boolean inDebug) {
 		inDebugMode.set(inDebug);
 		if (inDebug) {
-			System.out.println( "inDebug: " + inDebug);
 			mediator.getMachine().getControlUnit().reset();
 			mediator.getMachine().resetAllChannels();
 
@@ -2055,6 +2054,13 @@ public class DesktopController implements Initializable {
                         //CHANGE: current machine directory is now stored in the mediator
 			fileChooser.setInitialDirectory(new File(mediator.getCurrentMachineDirectory()));
 		}
+		String[] assemblyFileExtensions= {"*.a","*.asm"};
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("All Files", "*.*"),
+				new FileChooser.ExtensionFilter("Machine Files (*.cpu)", "*.cpu"),
+				new FileChooser.ExtensionFilter("Assembly Files (*.a or *.asm)",
+						assemblyFileExtensions )
+				);
 	}
 
 	/**
