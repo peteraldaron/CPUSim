@@ -226,7 +226,6 @@ public class EditMachineInstructionController implements Initializable {
         instrNames = FXCollections.observableArrayList();
         
         instructionList.setItems(instrNames);
-        instructionList.setId("testing");
         
         for (MachineInstruction instr : instructions){
             instrNames.add(instr.getName());

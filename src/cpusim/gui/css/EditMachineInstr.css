@@ -1,0 +1,6 @@
+/*ListView instructionList is used in edit machine instruction dialog box*/
+.list-cell:focused
+{
+	-fx-background-color: linear-gradient(from 0% 0% to 0% 80%, #ACCDF7, #5599EF, #ACCDF7);
+	-fx-text-fill: black;
+}

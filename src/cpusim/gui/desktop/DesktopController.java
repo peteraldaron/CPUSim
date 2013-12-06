@@ -1511,6 +1511,7 @@ public class DesktopController implements Initializable {
 	private void setInDebugMode(boolean inDebug) {
 		inDebugMode.set(inDebug);
 		if (inDebug) {
+			System.out.println( "inDebug: " + inDebug);
 			mediator.getMachine().getControlUnit().reset();
 			mediator.getMachine().resetAllChannels();
 
@@ -1527,6 +1528,7 @@ public class DesktopController implements Initializable {
 			}
 		}
 		else {
+			System.out.println( "inDebug: " + inDebug);
 			mainPane.getChildren().remove(1);
 			debugToolBarController.clearAllOutlines();
 			mediator.getBackupManager().flushBackups();
@@ -1538,6 +1540,8 @@ public class DesktopController implements Initializable {
 					tabEditorControllers.get(t).removeDebugColumn();
 				}
 			}
+			
+			canUndoProperty.set(true);
 		}
 		RAM codeStore = mediator.getMachine().getCodeStore();
 		if (codeStore != null) {
@@ -1677,7 +1681,7 @@ public class DesktopController implements Initializable {
 					canRedo = ticb.canRedo();
 					ancEqCar = (ta.getAnchor() == ta.getCaretPosition());
 				}
-				canUndoProperty.set(canUndo);
+				canUndoProperty.set( canUndo );
 				canRedoProperty.set(canRedo);
 				anchorEqualsCarret.set(ancEqCar);
 			}

@@ -140,6 +140,9 @@
     </VBox>
   </left>
   <stylesheets>
+    <URL value="@../css/EditMachineInstr.css" />
+    <!-- when fx css gets more accurate, should combine the two files, #instructionList{ ... } should replace
+    		the single style in EditMachineInstr.css and be moved to Dialogs.css-->
     <URL value="@../css/Dialogs.css" />
   </stylesheets>
 </BorderPane>
