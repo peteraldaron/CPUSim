@@ -15,6 +15,18 @@ package cpusim.gui.options;
  * 2.) removed one try catch and allOkay variable and replaced it with a try catch for a validation exception
  */
 
+/*
+ * Michael Goldenberg, Jinghui Yu, and Ben Borchard modified this file on 11/6/13
+ * with the following changes:
+ * 
+ * 1.) fixed the problem in the savePunctChars() method where it was returning true instead
+ * of false and vice-versa
+ * 2.) fixed the problem with saving the punctuation characters.  It was adding all the punctChar
+ * values on the right side to those on the left side, so it had all the two copies of half the 
+ * punctChars, which was causing problems because there were two comments, labels, and pseudos, when
+ * there were really only one.  We fixed it so it doesn't do that anymore.
+ */
+
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -333,7 +345,8 @@ public class OptionsController implements Initializable {
 
     public boolean savePunctuationTab() {
     	if (!punctuationTab.isDisabled()) {
-            ObservableList<PunctChar> punctChars = leftPunctuationTable.getItems();
+            ObservableList<PunctChar> punctChars = FXCollections.observableArrayList();
+            punctChars.addAll(leftPunctuationTable.getItems());
             punctChars.addAll(rightPunctuationTable.getItems());
             try{
                 Validate.punctChars(punctChars);
@@ -342,7 +355,7 @@ public class OptionsController implements Initializable {
                     pca[i] = punctChars.get(i);
                 }
                 mediator.getMachine().setPunctChars(pca);
-                return false;
+                return true;
             }
             catch(ValidationException ex){
                 if (tabPane.getSelectionModel().getSelectedItem() != punctuationTab) {
@@ -350,7 +363,7 @@ public class OptionsController implements Initializable {
                 }
                 Dialogs.showErrorDialog((Stage)OKButton.getScene().getWindow(), ex.getMessage(), "Punctuation"
                         + " Character Error");
-                return true;
+                return false;
             }
     	}
         return false;

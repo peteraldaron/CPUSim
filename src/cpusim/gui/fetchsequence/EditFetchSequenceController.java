@@ -95,12 +95,11 @@ public class EditFetchSequenceController implements Initializable {
                 Microinstruction micro = null;
                 for (String string : Machine.MICRO_CLASSES){
                     for (Microinstruction instr : mediator.getMachine().getMicros(string)){
-                        if(className.equals("comment") && !microName.equals("Comment")){
-                            micro = new cpusim.microinstruction.Comment();
-                            micro.setName(microName);
-                        }
-                        if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
-                            //special case if instruction is a comment
+                        if(className.equals("comment")){
+                                micro = new cpusim.microinstruction.Comment();
+                                micro.setName(microName);
+                            }
+                        else if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
                             micro = instr;
                         }
                     }
@@ -159,6 +158,12 @@ public class EditFetchSequenceController implements Initializable {
         int i = 0;
         for (final Microinstruction micro : micros){
             final Label microLabel = new Label(micro.getName());
+            if(micro.getMicroClass().equals("comment")){
+                //set style of label:
+                microLabel.setStyle("-fx-text-fill:red;-fx-font:bold italic "
+                        + "12px \"Monospace\";");
+
+            }
             microLabel.setPrefWidth(implementationFormatPane.getPrefWidth());
             microLabel.setPrefHeight(20);
             microLabel.setLayoutY(i);
@@ -198,7 +203,7 @@ public class EditFetchSequenceController implements Initializable {
                                         "Comment", 
                                         "Kommentti");
                             if(!(input==null) && !input.equals(""))
-                                micro.setName(input);
+                                micro.setName("//"+input);
                             updateMicros();
                         } 
 

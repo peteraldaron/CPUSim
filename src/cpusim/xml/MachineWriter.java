@@ -17,6 +17,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 // the package in which our project resides
 
+/**
+ * Jinghui Yu, Ben Borchard and Michael Goldenberg made the following modifications to
+ * this class on 11/11/13:
+ *
+ * 1.) Modified the DTD string so it write the initial value and read-only properties
+ * of register to machine.
+ *
+ */
+
 package cpusim.xml;
 
 
@@ -65,7 +74,8 @@ public class MachineWriter
             "<!ELEMENT FileChannel EMPTY>" + ls +
             "<!ATTLIST FileChannel file CDATA #REQUIRED id CDATA #REQUIRED>" + ls +
             "<!ELEMENT Register EMPTY>" + ls +
-            "<!ATTLIST Register name CDATA #REQUIRED width CDATA #REQUIRED id ID" +
+            "<!ATTLIST Register name CDATA #REQUIRED width CDATA #REQUIRED initialValue" +
+            " CDATA #REQUIRED readOnly (true|false) \"false\" id ID" +
             " #REQUIRED>" + ls +
             "<!ELEMENT RegisterArray (Register+)>" + ls +
             "<!ATTLIST RegisterArray name CDATA #REQUIRED width CDATA #REQUIRED length" +

@@ -4,7 +4,7 @@
 package cpusim.gui.util;
 
 /**
- * This class stores a base ("Bin", "Dec", "Hex", "Uns_Dec" or "ASCII")
+ * This class stores a base ("Bin", "Dec", "Hex", "Unsigned Dec", or "Ascii");
  * for displaying values of registers or RAM cells.
  * @author Ben Borchard
  * 

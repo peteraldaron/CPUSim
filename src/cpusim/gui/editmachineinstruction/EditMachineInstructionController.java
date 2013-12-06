@@ -400,11 +400,11 @@ public class EditMachineInstructionController implements Initializable {
                     Microinstruction micro = null;
                     for (String string : Machine.MICRO_CLASSES){
                         for (Microinstruction instr : mediator.getMachine().getMicros(string)){
-                            if(className.equals("comment") && !microName.equals("Comment")){
+                            if(className.equals("comment")){
                                 micro = new cpusim.microinstruction.Comment();
                                 micro.setName(microName);
                             }
-                            if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
+                            else if (instr.getName().equals(microName) && instr.getMicroClass().equals(className)){
                                 //special case if instruction is a comment
                                 micro = instr;
                             }
@@ -1027,6 +1027,12 @@ public class EditMachineInstructionController implements Initializable {
         for (final Microinstruction micro : currentInstr.getMicros()){
             final Label microLabel;
             microLabel = new Label(micro.getName());
+            if(micro.getMicroClass().equals("comment")){
+                //set style of label:
+                microLabel.setStyle("-fx-text-fill:red;-fx-font:bold italic "
+                        + "12px \"Monospace\";");
+
+            }
             microLabel.setPrefWidth(implementationFormatPane.getPrefWidth());
             microLabel.setPrefHeight(20);
             microLabel.setLayoutY(i);

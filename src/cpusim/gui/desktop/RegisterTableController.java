@@ -30,6 +30,13 @@ import java.util.Set;
  *
  * @author Ben Borchard
  */
+
+/*
+ * Michael Goldenberg, Jinghui Yu, and Ben Borchard modified this file on 11/6/13
+ * with the following changes:
+ * 
+ * 1.) got rid of an unused ArrayList of EditingMultiBaseStyleCells called datas
+ */
 public class RegisterTableController implements Initializable {
 
     /**
@@ -49,7 +56,6 @@ public class RegisterTableController implements Initializable {
     TableColumn<Register, Long> data;
 
     ObservableList<Register> registers;
-    ObservableList<EditingMultiBaseStyleLongCell> datas;
     private DesktopController desktop;
     String title;
     Base base;
