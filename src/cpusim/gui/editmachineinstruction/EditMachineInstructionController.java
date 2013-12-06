@@ -226,6 +226,7 @@ public class EditMachineInstructionController implements Initializable {
         instrNames = FXCollections.observableArrayList();
         
         instructionList.setItems(instrNames);
+        instructionList.setId("testing");
         
         for (MachineInstruction instr : instructions){
             instrNames.add(instr.getName());
@@ -538,8 +539,8 @@ public class EditMachineInstructionController implements Initializable {
                 new ArrayList<Field>(), new ArrayList<String>(), new ArrayList<String>(),
                 mediator.getMachine()));
         instrNames.add(0, uniqueName);
-        //instructionList.scrollTo(0);
-        //instructionList.getSelectionModel().selectFirst();
+        instructionList.scrollTo(0);
+        instructionList.getSelectionModel().selectFirst();
     }
     
     /**
