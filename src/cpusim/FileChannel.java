@@ -248,7 +248,7 @@ public class FileChannel implements IOChannel  {
 						   				    ((int) file.length()) ); 
             }
             if( !unreadStack.isEmpty() ) {
-            	String s = unreadStack.pop();
+            	String s = " " + unreadStack.pop();
             	reader.unread(s.toCharArray());
             }
         	
