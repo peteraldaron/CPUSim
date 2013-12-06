@@ -144,7 +144,7 @@ public class BackupManager
 		ControlUnit.State state = (ControlUnit.State)
                                             table.remove("control unit state");
 		state.restoreControlUnitToThisState();
-		
+
 		// get the microinstruction
 		Microinstruction micro = (Microinstruction) 
 											table.remove("microinstruction");
@@ -153,11 +153,12 @@ public class BackupManager
 		// connection, let the FileChannel know to undo the microinstruction
 		if( micro.getMicroClass().equals("io") && 
 				((IO) micro).getConnection() instanceof cpusim.FileChannel ) {
-			
-			System.out.println( ((IO) micro).getConnection() instanceof cpusim.FileChannel );
+			if( ((IO) micro).getDirection().equals("input") ) {
+				((cpusim.FileChannel) ((IO) micro).getConnection()).unread();
+			} else {
+				//((cpusim.FileChannel) ((IO) micro).getConnection()).unwrite();
+			}
 		}
-		//System.out.println( micro.getConnection() );
-		
         for (Object module : table.keySet()) {
             if (module instanceof Register) {
                 ((Register) module).setValue((Long) table.get(module));

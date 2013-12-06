@@ -12,6 +12,7 @@ package cpusim;
 import cpusim.util.*;
 
 import java.io.*;
+import java.util.Stack;
 
 /**
  * This file contains the class that manages an IO channel to/from a file.
@@ -24,7 +25,9 @@ public class FileChannel implements IOChannel  {
     // Reader for the file for input
     private PushbackReader reader;     
     // Writer for the file for output
-    private FileWriter writer;        
+    private FileWriter writer;      
+    // Stack to hold the strings read by the reader so they can be unread
+    private Stack<String> unreadStack;
     
     /**
      * Creates a new File Channel. Note that this file channel
@@ -38,6 +41,8 @@ public class FileChannel implements IOChannel  {
         this.file = file;
         this.reader = null;
         this.writer = null;
+        
+        unreadStack = new Stack<String>()	;
     }
 
     /**
@@ -81,6 +86,8 @@ public class FileChannel implements IOChannel  {
             // Make sure input is valid
             long value = Convert.fromAnyBaseStringToLong(s);
             Convert.checkFitsInBits(value, numBits);
+            // Push the string onto the unreadStack so it can be unread later
+            unreadStack.push(s);
             return value;
         } catch (NumberFormatException e) {
             throw new ExecutionException(e.getMessage());
@@ -112,6 +119,8 @@ public class FileChannel implements IOChannel  {
                         "character was " +
                         (c == -1 ? "the end of file" : "" + (char) c) + ".");
             }
+            // Push the character onto the unreadStack so it can be unread
+            unreadStack.push(""+((char) c));
             return (char) c;
         } catch (FileNotFoundException fne) {
             throw new ExecutionException("Attempted to read from file " +
@@ -140,6 +149,8 @@ public class FileChannel implements IOChannel  {
                         "character from file " + file.getName() + "\n but the " +
                         " end of the file was reached.");
             }
+            // Push the character onto the unreadStack so it can be unread
+            unreadStack.push(""+((char) c));
             return (char) c;
         } catch (FileNotFoundException fne) {
             throw new ExecutionException("Attempted to read from file " +
@@ -225,7 +236,44 @@ public class FileChannel implements IOChannel  {
             throw new ExecutionException(message);
         }
     }
+    
+    /**
+     * Pushes back the last thing read from the input file back into
+     * the pushbackReader to be read again.
+     */
+    public void unread() {
+    	try {
+            if (reader == null) {
+                reader = new PushbackReader(new FileReader(file), 
+						   				    ((int) file.length()) ); 
+            }
+            if( !unreadStack.isEmpty() ) {
+            	String s = unreadStack.pop();
+            	reader.unread(s.toCharArray());
+            }
+        	
+    	} catch (FileNotFoundException fne) {
+            throw new ExecutionException("Attempted to unread from file " +
+                    file.getName() + " but it could not be found.");
+        } catch (IOException ioe) {
+            throw new ExecutionException("CPUSim was unable to unread " +
+                    "from file " + file.getName() + ".");
+        }
+    }
 
+    
+    public void unwriteLong() {
+    	
+    }
+    
+    public void unwriteAscii() {
+    	
+    }
+    
+    public void unwriteUnicode() {
+    	
+    }
+    
     /**
      * Reset the file channel.
      */
