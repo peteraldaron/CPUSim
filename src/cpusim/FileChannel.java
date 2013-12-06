@@ -61,12 +61,17 @@ public class FileChannel implements IOChannel  {
                 reader = new PushbackReader(new FileReader(file), 
                 						    ((int) file.length()) );
             }
+            String initialSpaces = "";
+            
             // Read past any white space and
             // read the first non-white space-- if not a digit or + or -,
             // throw error
             int c = reader.read();
             while (c != -1 && Character.isWhitespace((char) c)) {
-                c = reader.read();
+                if( Character.isWhitespace((char) c) ) {
+                	initialSpaces += " ";
+                }
+            	c = reader.read();
             }
             String s = "";
             if (c == '+' || c == '-') {
@@ -89,7 +94,7 @@ public class FileChannel implements IOChannel  {
             long value = Convert.fromAnyBaseStringToLong(s);
             Convert.checkFitsInBits(value, numBits);
             // Push the string onto the unreadStack so it can be unread later
-            unreadStack.push(s);
+            unreadStack.push(initialSpaces + s);
             return value;
         } catch (NumberFormatException e) {
             throw new ExecutionException(e.getMessage());
@@ -249,8 +254,10 @@ public class FileChannel implements IOChannel  {
                 reader = new PushbackReader(new FileReader(file), 
 						   				    ((int) file.length()) ); 
             }
+            // If the unreadStack is not empty, unread with the string at the 
+            // top of the stack
             if( !unreadStack.isEmpty() ) {
-            	String s = " " + unreadStack.pop();
+            	String s = unreadStack.pop();
             	reader.unread(s.toCharArray());
             	System.out.println(s);
             }
