@@ -22,6 +22,8 @@ package cpusim.util;
 
 import cpusim.Machine;
 import cpusim.MachineInstruction;
+import cpusim.Microinstruction;
+import cpusim.microinstruction.IO;
 import cpusim.module.ControlUnit;
 import cpusim.module.RAM;
 import cpusim.module.RAMLocation;
@@ -136,13 +138,26 @@ public class BackupManager
 		//the restoration will cause all restorations to be saved in
 		//a backup state, so we'll create a new segment here and then
 		//dump it after doing the restorations.
-		startNewBackupMicroState(null);
+		startNewBackupMicroState(null,null);
 
 		//CT update control unit to reflect where we have backed up to
 		ControlUnit.State state = (ControlUnit.State)
                                             table.remove("control unit state");
 		state.restoreControlUnitToThisState();
-
+		
+		// get the microinstruction
+		Microinstruction micro = (Microinstruction) 
+											table.remove("microinstruction");
+		
+		// If the microinstruction is an io instruction with a fileChannel 
+		// connection, let the FileChannel know to undo the microinstruction
+		if( micro.getMicroClass().equals("io") && 
+				((IO) micro).getConnection() instanceof cpusim.FileChannel ) {
+			
+			System.out.println( ((IO) micro).getConnection() instanceof cpusim.FileChannel );
+		}
+		//System.out.println( micro.getConnection() );
+		
         for (Object module : table.keySet()) {
             if (module instanceof Register) {
                 ((Register) module).setValue((Long) table.get(module));
@@ -172,17 +187,10 @@ public class BackupManager
 	public void backupOneMachineInstruction()
 	{
 		if(canBackupOneMachineInstr())
-		{	
-			
-			//Get the machine instruction that is being backed up
-			MachineInstruction m = ((ControlUnit.State) machineInstructionStack.peek().peek().get("control unit state")).getInstr();
-			if(m != null)
-				System.out.println( m.getName() );
-			
+		{			
 			while (canBackupOneMicroInstr()){
 				backupOneMicroInstruction();
 			}
-			
 	        
 			//pop the empty machine instruction
 			machineInstructionStack.pop();
@@ -227,10 +235,13 @@ public class BackupManager
      *              saved in the hash map.
      */
 	//C.T. created method
-	public void startNewBackupMicroState(ControlUnit.State state){
+	public void startNewBackupMicroState(ControlUnit.State state, Microinstruction currentMicro){
 		HashMap microChanges = new HashMap();
 		machineInstructionStack.peek().push(microChanges);
 		microChanges.put("control unit state", state);
+		
+		// Save the current microinstruction 
+		microChanges.put("microinstruction", currentMicro);
 	}
 
     /**
@@ -296,8 +307,9 @@ public class BackupManager
             }
             //C.T.
             else if (((Machine.StateWrapper)newState).getState() == Machine.State.START_OF_MICROINSTRUCTION) {
-                if (canBackupOneMachineInstr()){
-                    startNewBackupMicroState((ControlUnit.State)((Machine.StateWrapper) newState).getValue());
+                if (canBackupOneMachineInstr()) {
+                    startNewBackupMicroState((ControlUnit.State)((Machine.StateWrapper) newState).getValue(),
+                    		((Machine) ((Property)event).getBean()).getCurrentMicro() );
                 }
             }
         }

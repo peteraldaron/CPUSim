@@ -4,6 +4,8 @@
  * Last update: November 2013
  * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
  * Method added: clearIOChannelBuffer
+ * 
+ * Changed PushbackReader to have a buffer size of the current file size 
  */
 package cpusim;
 
@@ -49,7 +51,8 @@ public class FileChannel implements IOChannel  {
     public long readLong(int numBits) {
         try {
             if (reader == null) {
-                reader = new PushbackReader(new FileReader(file));
+                reader = new PushbackReader(new FileReader(file), 
+                						    ((int) file.length()) );
             }
             // Read past any white space and
             // read the first non-white space-- if not a digit or + or -,
@@ -99,7 +102,8 @@ public class FileChannel implements IOChannel  {
     public char readAscii() {
         try {
             if (reader == null) {
-                reader = new PushbackReader(new FileReader(file));
+                reader = new PushbackReader(new FileReader(file), 
+						   				    ((int) file.length()) ); 
             }
             int c = reader.read();
             if (c > 255 || c < 0) {
@@ -127,7 +131,8 @@ public class FileChannel implements IOChannel  {
     public char readUnicode() {
         try {
             if (reader == null) {
-                reader = new PushbackReader(new FileReader(file));
+                reader = new PushbackReader(new FileReader(file), 
+						   				    ((int) file.length()) );   
             }
             int c = reader.read();
             if (c < 0) {
