@@ -1021,7 +1021,7 @@ public class EditMachineInstructionController implements Initializable {
     public void updateMicros() {
         if (currentInstr == null)
             return;
-
+        
         implementationFormatPane.getChildren().clear();
         int i = 0;
         for (final Microinstruction micro : currentInstr.getMicros()){

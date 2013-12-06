@@ -309,10 +309,10 @@ public class Validate
      * @param instr instruction whose first assembly field needs to be checked
      */
     public static void opcodeFieldIsFirst(MachineInstruction instr){
-        if (!instr.getAssemblyColors().get(0).equals(instr.getInstructionColors().get(0))){
+    	if (!instr.getAssemblyFields().get(0).equals(instr.getInstructionFields().get(0))){
             throw new ValidationException("Your opcode (the first field in the instruction fields)"
-                    + "must be the first field in your assembly fields.  This is not the"
-                    + "case for instruction "+instr.getName()+".");
+                    + " must be the first field in your assembly fields.  This is not the"
+                    + " case for instruction \""+instr.getName()+"\".");
         }
     }
 
@@ -334,7 +334,7 @@ public class Validate
                     "The first field \"" + opField.getName() + "\"" +
                         " of instruction \"" + instr.getName() + "\" is not" +
                         " legal.\nIt must have a positive length, " +
-                        "be absolute, be required,\nand " +
+                        "be absolute, be required, and " +
                         "not restricted to particular values.");
         }
     }
@@ -362,12 +362,12 @@ public class Validate
      */
     public static void opcodeFits(MachineInstruction instr)
     {
-        if (instr.getOpcode() >= (long) Math.pow(2, instr.getNumBits())) {
+        if (instr.getOpcode() >= (long) Math.pow(2, instr.getAssemblyFields().get(0).getNumBits())) {
             throw new ValidationException("The opcode \"" +
                         Convert.fromLongToHexadecimalString(instr.getOpcode(),
                                                             instr.getNumBits()) +
                         "\" (hex) of instruction \"" + instr.getName() +
-                        "\" is too big for the\nfirst field of the instruction.");
+                        "\" is too big for the opcode field assigned.");
         }
     }
 
