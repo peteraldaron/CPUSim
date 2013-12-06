@@ -17,7 +17,7 @@
  * 
  * Modified by: Peter Zhang, Stephen Jenkins , Brendan Tschaen
  * Modified on: Dec 4 2013
- * Methods modified: updateMicros
+ * Methods modified: updateMicros, initialize
  * now the updateMicros asks the user to enter a label for the comment micro
  * once the user double clicks on the comment label
  */
@@ -128,6 +128,9 @@ public class EditMachineInstructionController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * added functionality to implementationFormatPane.setOnDragDropped so that 
+     * it builds a new comment instruction every time a comment instruction
+     * is dropped.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
