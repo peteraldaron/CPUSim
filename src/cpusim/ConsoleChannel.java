@@ -99,7 +99,7 @@ public class ConsoleChannel implements StringChannel {
                         ioConsole.appendText(LINE_SEPARATOR);
                         
                         //easter egg:
-                        //since these are not official "help", they are treated 
+                        //since these are not official "help" commands, they are treated 
                         //as entered text.
                         if(enteredText.toLowerCase().equals("ayuda")){
                                 ioConsole.appendText( "Puedes entregar enteros en" 
