@@ -92,9 +92,7 @@ public class Comment extends Microinstruction
 
     public String toString()
     {
-        //so that it always is displayed in italics and gray.
-        return "<html><em><font color=gray>" +
-                getHTMLName() + "</font></em></html>";
+        return "Comment:"+this.getName();
     }
 
     /**

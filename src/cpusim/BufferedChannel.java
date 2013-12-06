@@ -281,18 +281,4 @@ public class BufferedChannel implements IOChannel {
         this.inputmanager.clearBuffer();
         this.outputmanager.clearBuffer();
     }
-    /**
-     * This class does not use this method. 
-     * added here for inheritance compatibility
-     */
-    public void output(String s){}
-    
-    /**
-     * Does not use this method. 
-     * added here for inheritance compatibility
-     */
-    public String getInput(){
-        //return the empty string
-        return "";
-    }
 }
