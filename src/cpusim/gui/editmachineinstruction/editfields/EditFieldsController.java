@@ -311,7 +311,7 @@ public class EditFieldsController implements Initializable {
                         catch (ValidationException ex) {
                             //notify user
                             Dialogs.showErrorDialog(stage, "Invalid/duplicate name detected,"+
-                                "\n Field not set");
+                                "\nField not set");
                             (text.getRowValue()).setName(oldName);
                         }
                         updateTable();
