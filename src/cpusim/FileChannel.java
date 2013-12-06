@@ -3,9 +3,11 @@
  * Author: Dale Skrien
  * Last update: November 2013
  * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
- * Method added: clearIOChannelBuffer
- * 
+ * Method added: clearIOChannelBuffer, unread
+ * Methods Modified: readLong, readAscii, readUnicode
+ * (Edited these methods to store what they read in the unreadStack as well)
  * Changed PushbackReader to have a buffer size of the current file size 
+ * Fields Added: unreadStack to hold the contents read from a file
  */
 package cpusim;
 
@@ -260,19 +262,6 @@ public class FileChannel implements IOChannel  {
             throw new ExecutionException("CPUSim was unable to unread " +
                     "from file " + file.getName() + ".");
         }
-    }
-
-    
-    public void unwriteLong() {
-    	
-    }
-    
-    public void unwriteAscii() {
-    	
-    }
-    
-    public void unwriteUnicode() {
-    	
     }
     
     /**

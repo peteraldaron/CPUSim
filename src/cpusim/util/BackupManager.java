@@ -5,6 +5,15 @@
 //Project: 	CPU Sim
 //Date:    	July, 2000
 
+/**
+ * File: Backupmanager.java
+ * Last update: Dec 2013
+ * Modified by: Peter Zhang, Stephen Jenkins, Brendan Tschaen
+ * Method modified: changed, startNewBackupMicroState, restoreMicroChanges
+ * (Edited this class to store each microinstruction excuted, and to call
+ * the unread method in FileChannel when a file io instruction is backed up)
+ */
+
 //Description:
 //This file contains the class that manages the backup operation
 //by saving and restoring the previous state of the machine.  It
@@ -153,6 +162,7 @@ public class BackupManager
 		// connection, let the FileChannel know to undo the microinstruction
 		if( micro.getMicroClass().equals("io") && 
 				((IO) micro).getConnection() instanceof cpusim.FileChannel ) {
+			// If it is an input microinstruction call unread in FileChannel
 			if( ((IO) micro).getDirection().equals("input") ) {
 				((cpusim.FileChannel) ((IO) micro).getConnection()).unread();
 			} else {
@@ -236,7 +246,9 @@ public class BackupManager
      *              saved in the hash map.
      */
 	//C.T. created method
-	public void startNewBackupMicroState(ControlUnit.State state, Microinstruction currentMicro){
+	public void startNewBackupMicroState(ControlUnit.State state, 
+											Microinstruction currentMicro) 
+	{
 		HashMap microChanges = new HashMap();
 		machineInstructionStack.peek().push(microChanges);
 		microChanges.put("control unit state", state);
@@ -307,10 +319,11 @@ public class BackupManager
                 startNewBackupInstructionState();
             }
             //C.T.
-            else if (((Machine.StateWrapper)newState).getState() == Machine.State.START_OF_MICROINSTRUCTION) {
+            else if (((Machine.StateWrapper)newState).getState() == 
+            						 Machine.State.START_OF_MICROINSTRUCTION) {
                 if (canBackupOneMachineInstr()) {
                     startNewBackupMicroState((ControlUnit.State)((Machine.StateWrapper) newState).getValue(),
-                    		((Machine) ((Property)event).getBean()).getCurrentMicro() );
+                    	((Machine) ((Property)event).getBean()).getCurrentMicro() );
                 }
             }
         }
