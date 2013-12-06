@@ -10,6 +10,13 @@
  * 
  * 1.) Removed the isAbleToClose method and instead call Validate.containsDecodeMicro
  * to check if there is a decode microinstruction in the fetch sequence before closing
+ *
+ *
+ * Modified by: Peter Zhang, Stephen Jenkins , Brendan Tschaen
+ * Modified on: Dec 4 2013
+ * Methods modified: updateMicros, initialize
+ * now the updateMicros asks the user to enter a label for the comment micro
+ * once the user double clicks on the comment label
  */
 package cpusim.gui.fetchsequence;
 

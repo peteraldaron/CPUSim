@@ -15,6 +15,13 @@
  * name as soon the user enters
  * 4.) Added an updateTable method so that to allow for dynamic validity checking of the
  * name tableColumn
+ *
+ *
+ * Modified by: Peter Zhang, Stephen Jenkins , Brendan Tschaen
+ * Modified on: Dec 4 2013
+ * Now the isAbleToClose and checkValidity methods are ACTUALLY modified.
+ * Also, added the prompt to user functionality when user tries to enter a 
+ * duplicate field name.
  */
 
 
@@ -185,6 +192,9 @@ public class EditFieldsController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * Modified by: Peter Zhang Stephen Jenkins Brendan Tschaen
+     * On Dec 5 2013
+     * Modified the setOnEditCommit listener to print out an error message
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -293,9 +303,15 @@ public class EditFieldsController implements Initializable {
                         String oldName = text.getOldValue();
                         ( text.getRowValue()).setName(newName);
                         try{
+                            if(newName.equals(oldName)){
+                                return;
+                            }
                             Validate.namedObjectsAreUniqueAndNonempty(table.getItems().toArray());
                         }
                         catch (ValidationException ex) {
+                            //notify user
+                            Dialogs.showErrorDialog(stage, "Invalid/duplicate name detected,"+
+                                "\n Field not set");
                             (text.getRowValue()).setName(oldName);
                         }
                         updateTable();
@@ -521,29 +537,6 @@ public class EditFieldsController implements Initializable {
     }
     
     /**
-     * checks whether everything is okay to be saved
-     * @return true if everything is okay, else false
-     */
-    private boolean isAbleToClose(){
-        
-        ArrayList<String> fieldNames = new ArrayList<>();
-        for (Field field : allFields){
-            if (field.getName().indexOf(" ") != -1){
-                Dialogs.showErrorDialog(stage, "Field name '"+field.getName()+"' is not "
-                        + "valid.", "Field Name Error");
-                return false;
-            } 
-            if (fieldNames.contains(field.getName())){
-                Dialogs.showErrorDialog(stage, "You cannot have two fields with the "
-                        + "same name ("+field.getName()+")", "Field Name Error");
-                return false;
-            }
-            fieldNames.add(field.getName());
-        }
-        return true;
-    }
-    
-    /**
      * deletes the selected field and selects the next appropriate field (either
      * the one below or above)
      */
@@ -603,19 +596,6 @@ public class EditFieldsController implements Initializable {
         return proposedName;
     }
     
-    /**
-     * Checks the validity of a list of Fields.
-     */
-    private boolean checkValidity(Object[] list) {
-            boolean result = true;
-            try {
-                    Validate.allNamesAreUnique(list);
-
-            } catch (ValidationException e) {
-                    result = false;
-            }
-            return result;
-    }
 
     private boolean fieldNameTaken(String newName) {
         for (Field field : allFields){
