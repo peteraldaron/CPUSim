@@ -98,6 +98,36 @@ public class ConsoleChannel implements StringChannel {
                         
                         ioConsole.appendText(LINE_SEPARATOR);
                         
+                        //easter egg:
+                        //since these are not official "help", they are treated 
+                        //as entered text.
+                        if(enteredText.toLowerCase().equals("ayuda")){
+                                ioConsole.appendText( "Puedes entregar enteros en" 
+                                        +"formato de dec, bin, o hex " 
+                                        +"con prefijo como" 
+                                        +"\"0b\" ,\"-0b\"." 
+                                        +"\"0x\" , \"-0x\"." + LINE_SEPARATOR
+                                        +"y tambien puedes entregar letras."
+                                        +LINE_SEPARATOR);
+                        }
+                        //in honor of Linus T. who developed the lovely tool of git
+                        if(enteredText.toLowerCase().equals("apu")){
+                            ioConsole.appendText ("kokonaislukuja: Kirjoita"
+                                         + "desimaali, binääri-tai heksadesimaali"
+                                         + "kokonaislukuja."
+                                         + "Binäärisille Käytä etuliite"
+                                         + "\" 0B \" tai \"-0B \"."
+                                         + "Heksadesimaaliluvussa, käytä" +
+                                         "\" 0x \"tai \"-0x \"." + LINE_SEPARATOR);
+                            ioConsole.appendText ("Sillä merkkiä: Kirjoita"
+                                         + "-merkki ilman ympäröivän"
+                                         + "lainausmerkkejä ja paina Enter / Return."
+                                         + LINE_SEPARATOR
+                                         + "Jos haluat pysäyttää suorituksen painamalla Pysäytys"
+                                         + "-valikosta kohteen Suorita valikosta."
+                                         + LINE_SEPARATOR);
+                            
+                        }
                         // Output directions if the user asks for "help"
                         if(enteredText.toLowerCase().equals("help")) {
                                 ioConsole.appendText( "For Integers:Type in" 
